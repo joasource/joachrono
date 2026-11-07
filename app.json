@@ -7,7 +7,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "plugins": ["expo-router"],
+    "plugins": ["expo-router", "expo-audio", "expo-asset"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.joachrono"

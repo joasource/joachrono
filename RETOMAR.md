@@ -9,14 +9,14 @@ App de cronômetro de exercícios (Android e iOS), Expo SDK 58 + TypeScript + ex
 - Vai ser publicado nas lojas; PT-BR e EN. Relógio (Garmin/Apple Watch) fica para depois, mas neste projeto — por isso o motor é TS puro.
 - Licença: proprietária, todos os direitos reservados (titular Joaquim Ferreira). Revisar com advogado + EULA/política de privacidade antes de publicar.
 
-## Estado (fases 0 e 1 feitas)
+## Estado (fases 0, 1 e 2 feitas)
 
 - `src/motor/` (sem React/Expo): `compilar.ts`, `maquina.ts`, `livre.ts`, testes em `__tests__/` (20 passando). Tempo sempre por diferença de timestamps; `tick` atravessa etapas vencidas e preserva o excedente.
-- `src/app/`: só `_layout.tsx` e `index.tsx` provisórios.
+- `src/execucao/`: `useExecucao` (liga o motor ao relógio de 100 ms), `useSinais` (expo-audio + expo-haptics), `aparencia.ts` (cores/rótulos por etapa). `src/app/executar.tsx` roda um treino de exemplo (params `?rounds=&trabalho=&descanso=`) com `useKeepAwake`. Sons WAV simples gerados em `assets/sons/` (trocáveis). Ainda não testado em aparelho/emulador.
+- `src/app/index.tsx`: provisória, com link para o treino de exemplo.
 
 ## Próximos passos
 
-2. Tela de execução (som, vibração, tela acesa, cores por etapa) — consultar a doc do SDK 58 antes de usar APIs Expo (AGENTS.md).
 3. Editor simples + lista de treinos com persistência local.
 4. Editor avançado. 5. Segundo plano/tela bloqueada (notificações locais; serviço em primeiro plano no Android). 6. i18n PT/EN, ícone, acessibilidade. 7. Builds EAS e publicação.
 
