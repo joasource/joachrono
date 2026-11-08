@@ -45,7 +45,7 @@ describe('normalizarItens', () => {
     });
     expect(itens[1]).toMatchObject({ vezes: 99, itens: [] });
   });
-  it('corta o aninhamento além do limite', () => {
+  it('não aceita repetição dentro de repetição', () => {
     let t: unknown = [];
     for (let i = 0; i < 6; i++) t = [{ tipo: 'repeticao', id: `r${i}`, vezes: 2, itens: t }];
     const prof = (itens: Item[]): number =>

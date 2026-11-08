@@ -40,7 +40,7 @@ export function FormSimples(props: {
   function converter() {
     Alert.alert(
       'Converter para avançado?',
-      'Você poderá editar etapas e repetições livremente, mas não dá para voltar ao modo simples.',
+      'Você poderá editar etapas e blocos de repetição livremente, mas não dá para voltar ao modo simples.',
       [
         { text: 'Cancelar', style: 'cancel' },
         { text: 'Converter', onPress: () => props.onConverter(treino) },

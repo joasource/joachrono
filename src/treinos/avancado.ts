@@ -1,4 +1,4 @@
-// Treino do "modo avançado": árvore de etapas e repetições aninhadas (o mesmo `Item` do motor).
+// Treino do "modo avançado": lista de etapas e blocos "Repetir N×" (um nível, como no Garmin Connect).
 import {
   compilar,
   duracaoTotal,
@@ -19,8 +19,8 @@ export interface TreinoAvancado {
 export const LIMITES_AVANCADO = {
   vezes: 99,
   segundos: 3600,
-  /** Quantas repetições podem ficar uma dentro da outra. */
-  profundidade: 3,
+  /** Repetições não ficam dentro de outras: só etapas simples dentro de um bloco. */
+  profundidade: 1,
   /** Teto de etapas depois de desdobrar as repetições (protege o aparelho de treinos absurdos). */
   passos: 2000,
 };
