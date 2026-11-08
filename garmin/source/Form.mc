@@ -332,10 +332,10 @@ class SalvadorSimples {
 // Abre o editor do modo simples. Se `trocar`, substitui a tela atual (vindo do menu de ações).
 function abrirEditorSimples(indice as Number, treino as Dictionary, trocar as Boolean) as Void {
     var campos = [
+        campoTempo("a", Rez.Strings.TempoAquecimento, 0, false),
         campoNum("r", Rez.Strings.Rounds, 1, LIM_ROUNDS),
         campoTempo("t", Rez.Strings.TempoTrabalho, 1, false),
         campoTempo("d", Rez.Strings.TempoDescanso, 0, false),
-        campoTempo("a", Rez.Strings.TempoAquecimento, 0, false),
         campoTempo("z", Rez.Strings.TempoDesaquecimento, 0, false),
         campoBool("p", Rez.Strings.PularUltimo)
     ] as Array<Campo>;

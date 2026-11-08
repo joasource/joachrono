@@ -103,12 +103,6 @@ function lerTreinos() as Array<Dictionary> {
                 lista.add(t);
             }
         }
-    } else {
-        // Primeira execução: alguns exemplos para começar.
-        lista.add(treinoNovo(8, 20, 10, 0, 0));
-        lista.add(treinoNovo(5, 60, 30, 300, 300));
-        lista.add(treinoNovo(3, 180, 60, 0, 0));
-        salvarTreinos(lista);
     }
     return lista;
 }

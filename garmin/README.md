@@ -4,7 +4,7 @@ App Connect IQ (Monkey C, `watch-app`) que porta o motor do joaChrono para o rel
 
 ## O que faz (v1)
 
-- Lista de treinos do **modo simples** (rounds, trabalho, descanso, aquecimento, desaquecimento, pular último descanso), guardados no relógio. Vêm 3 exemplos na primeira execução.
+- Lista de treinos do **modo simples** (rounds, trabalho, descanso, aquecimento, desaquecimento, pular último descanso), guardados no relógio. A lista começa vazia na primeira execução. O editor segue a ordem do app: aquecimento, rounds, trabalho, descanso, desaquecimento.
 - Editor no relógio (`Form.mc`): minutos e segundos separados, números exatos (1 s, 1 min), UP/DOWN mudam o valor e **segurar repete cada vez mais rápido**, START avança (minutos → segundos → próximo campo, e salva no último), BACK volta.
 - **Modo avançado** (`Avancado.mc`): "+ Treino avançado" abre uma lista de etapas (aquecer, trabalho, descanso, desaquecer, livre) e blocos "Repetir N×" (um nível, como no app). Cada linha abre ações: editar, subir, descer, excluir e, no bloco, adicionar etapa dentro. Tempo 0:00 = fim manual (DOWN avança). BACK pergunta antes de descartar. Limites: 40 itens e 500 etapas desdobradas.
 - Treino: START pausa/retoma, DOWN próxima etapa, UP volta (reinicia a etapa depois de 3 s), BACK abre o menu Continuar / Salvar e sair / Descartar e sair. Trabalho aparece em fundo branco, o resto em fundo preto.
