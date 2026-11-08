@@ -22,9 +22,6 @@ import { OpcaoSwitch } from './OpcaoSwitch';
 type Campo = Exclude<keyof TreinoSimples, 'modo' | 'id' | 'nome' | 'pularUltimoDescanso'>;
 
 const CAMPOS: { campo: Campo; chave: string; min: number; max: number; tempo?: boolean }[] = [
-  { campo: 'rounds', chave: 'form.rounds', min: 1, max: LIMITES.rounds },
-  { campo: 'segundosRound', chave: 'form.trabalho', min: 1, max: LIMITES.segundos, tempo: true },
-  { campo: 'segundosDescanso', chave: 'form.descanso', min: 0, max: LIMITES.segundos, tempo: true },
   {
     campo: 'segundosAquecimento',
     chave: 'form.aquecimento',
@@ -32,6 +29,9 @@ const CAMPOS: { campo: Campo; chave: string; min: number; max: number; tempo?: b
     max: LIMITES.segundos,
     tempo: true,
   },
+  { campo: 'rounds', chave: 'form.rounds', min: 1, max: LIMITES.rounds },
+  { campo: 'segundosRound', chave: 'form.trabalho', min: 1, max: LIMITES.segundos, tempo: true },
+  { campo: 'segundosDescanso', chave: 'form.descanso', min: 0, max: LIMITES.segundos, tempo: true },
   {
     campo: 'segundosDesaquecimento',
     chave: 'form.desaquecimento',
