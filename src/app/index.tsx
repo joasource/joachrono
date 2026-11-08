@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { t } from '../i18n/t';
 import { formatarTempo } from '../execucao/aparencia';
 import { salvarTreinos } from '../treinos/armazenamento';
-import { medidas, type TreinoSalvo } from '../treinos/modelo';
+import { duplicarTreinos, medidas, type TreinoSalvo } from '../treinos/modelo';
 import { useTreinos } from '../treinos/useTreinos';
 
 function detalhe(treino: TreinoSalvo): string {
@@ -43,6 +43,13 @@ export default function Inicio() {
 
   function selecionarTodos() {
     setSelecionados(new Set((treinos ?? []).map((x) => x.id)));
+  }
+
+  async function duplicarSelecionados() {
+    const { lista } = duplicarTreinos(treinos ?? [], selecionados, t('inicio.copiaSufixo'));
+    setTreinos(lista);
+    setSelecionados(new Set());
+    await salvarTreinos(lista);
   }
 
   function excluirSelecionados() {
@@ -84,6 +91,14 @@ export default function Inicio() {
             style={estilos.engrenagem}
           >
             <Text style={estilos.engrenagemTexto}>☑</Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('inicio.duplicarSelecionados')}
+            onPress={() => void duplicarSelecionados()}
+            style={estilos.engrenagem}
+          >
+            <Text style={estilos.engrenagemTexto}>⧉</Text>
           </Pressable>
           <Pressable
             accessibilityRole="button"

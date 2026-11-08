@@ -7,7 +7,7 @@ import {
   paraTreinoAvancado,
   type TreinoAvancado,
 } from './avancado';
-import { inteiro } from './util';
+import { inteiro, novoId } from './util';
 
 export interface TreinoSimples {
   modo: 'simples';
@@ -92,4 +92,25 @@ export function medidas(
   if (t.modo === 'avancado') return medidasAvancado(t);
   const passos = compilar(paraTreinoSimples(t));
   return { ...duracaoTotal(passos), passos: passos.length };
+}
+
+/**
+ * Copia os treinos de `ids` (cópia profunda, id novo), cada cópia logo depois do original. O nome
+ * ganha `sufixo` (ex.: "(cópia)"); treino sem nome continua sem nome. Devolve também os ids novos.
+ */
+export function duplicarTreinos(
+  lista: TreinoSalvo[],
+  ids: ReadonlySet<string>,
+  sufixo: string,
+): { lista: TreinoSalvo[]; novosIds: string[] } {
+  const novosIds: string[] = [];
+  const resultado = lista.flatMap((treino) => {
+    if (!ids.has(treino.id)) return [treino];
+    const copia = JSON.parse(JSON.stringify(treino)) as TreinoSalvo;
+    copia.id = novoId();
+    copia.nome = treino.nome ? `${treino.nome} ${sufixo}` : '';
+    novosIds.push(copia.id);
+    return [treino, copia];
+  });
+  return { lista: resultado, novosIds };
 }

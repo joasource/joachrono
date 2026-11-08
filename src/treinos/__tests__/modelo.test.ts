@@ -1,5 +1,6 @@
 import { comTreino, semTreino } from '../armazenamento';
 import {
+  duplicarTreinos,
   medidas,
   normalizarSimples,
   normalizarTreino,
@@ -64,5 +65,32 @@ describe('lista', () => {
     const l1 = comTreino([], a);
     expect(comTreino(l1, { ...a, nome: 'Novo' })).toHaveLength(1);
     expect(semTreino(l1, 'a')).toEqual([]);
+  });
+});
+
+describe('duplicarTreinos', () => {
+  it('copia logo depois do original, com id novo e sufixo no nome', () => {
+    const a = { ...novoTreinoSimples('a'), nome: 'Tabata' };
+    const b = novoTreinoSimples('b');
+    const { lista, novosIds } = duplicarTreinos([a, b], new Set(['a']), '(cópia)');
+    expect(lista.map((x) => x.nome)).toEqual(['Tabata', 'Tabata (cópia)', '']);
+    expect(lista[0]).toBe(a);
+    expect(lista[1].id).toBe(novosIds[0]);
+    expect(lista[1].id).not.toBe('a');
+    expect(lista[2]).toBe(b);
+  });
+  it('copia profunda do avançado e sem nome continua sem nome', () => {
+    const av = simplesParaAvancado(novoTreinoSimples('x'));
+    const { lista } = duplicarTreinos([av], new Set(['x']), '(copy)');
+    expect(lista).toHaveLength(2);
+    expect(lista[1].nome).toBe('');
+    expect(lista[1]).toMatchObject({ modo: 'avancado', itens: av.itens });
+    expect((lista[1] as typeof av).itens).not.toBe(av.itens);
+  });
+  it('vários de uma vez e ids que não existem são ignorados', () => {
+    const l = [novoTreinoSimples('a'), novoTreinoSimples('b')];
+    const r = duplicarTreinos(l, new Set(['a', 'b', 'z']), '(c)');
+    expect(r.lista).toHaveLength(4);
+    expect(r.novosIds).toHaveLength(2);
   });
 });

@@ -40,6 +40,8 @@ export const en: Traducoes = {
     selecionarTodos: 'Select all',
     cancelarSelecao: 'Cancel selection',
     excluirSelecionados: 'Delete selected',
+    duplicarSelecionados: 'Duplicate selected',
+    copiaSufixo: '(copy)',
     marcarA11y: 'Select %{nome}',
     excluirVarios: { one: 'Delete %{count} workout?', other: 'Delete %{count} workouts?' },
   },
@@ -96,9 +98,9 @@ export const en: Traducoes = {
           'Sounds play and the device vibrates even with the screen locked. If it doesn’t work, allow notifications and turn off battery optimization for the app in system settings (on some devices, like Xiaomi, also “Show on lock screen”).',
       },
       {
-        titulo: 'Select and delete',
+        titulo: 'Select, duplicate and delete',
         texto:
-          'In the workout list and in the history, press and hold an item to select it; then tap others and use the trash can.',
+          'In the workout list and in the history, press and hold an item to select it; then tap others and use the trash can. In the workout list, the ⧉ button makes a copy of the selected ones.',
       },
       {
         titulo: 'History',

@@ -38,6 +38,8 @@ export const pt = {
     selecionarTodos: 'Selecionar todos',
     cancelarSelecao: 'Cancelar seleção',
     excluirSelecionados: 'Excluir selecionados',
+    duplicarSelecionados: 'Duplicar selecionados',
+    copiaSufixo: '(cópia)',
     marcarA11y: 'Selecionar %{nome}',
     excluirVarios: { one: 'Excluir %{count} treino?', other: 'Excluir %{count} treinos?' },
   },
@@ -94,9 +96,9 @@ export const pt = {
           'Os sinais tocam e o aparelho vibra mesmo com a tela bloqueada. Se não funcionar, permita notificações e desative a economia de bateria para o app nos ajustes do sistema (em alguns aparelhos, como Xiaomi, também “Mostrar na tela de bloqueio”).',
       },
       {
-        titulo: 'Selecionar e excluir',
+        titulo: 'Selecionar, duplicar e excluir',
         texto:
-          'Na lista de treinos e no histórico, mantenha o dedo sobre um item para selecionar; depois toque nos outros e use a lixeira.',
+          'Na lista de treinos e no histórico, mantenha o dedo sobre um item para selecionar; depois toque nos outros e use a lixeira. Na lista de treinos, o botão ⧉ cria uma cópia dos selecionados.',
       },
       {
         titulo: 'Histórico',
