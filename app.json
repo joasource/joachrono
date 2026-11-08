@@ -15,8 +15,14 @@
       "expo-notifications",
       [
         "expo-localization",
-        { "supportedLocales": { "ios": ["pt", "en"], "android": ["pt", "en"] } }
-      ]
+        {
+          "supportedLocales": {
+            "ios": ["pt", "en"],
+            "android": ["pt", "en"]
+          }
+        }
+      ],
+      "expo-sharing"
     ],
     "locales": {
       "pt": "./locales/pt.json",

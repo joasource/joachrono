@@ -105,6 +105,11 @@ export const pt = {
         texto:
           'Cada treino concluído é registrado. Se você sair antes do fim, o registro só é guardado a partir de 10 segundos.',
       },
+      {
+        titulo: 'Backup',
+        texto:
+          'Em Configurações, “Exportar backup” gera um arquivo JSON com treinos, histórico e configurações. “Importar backup” lê esse arquivo: treinos com o mesmo identificador são substituídos, os outros ficam.',
+      },
     ],
   },
   config: {
@@ -132,6 +137,22 @@ export const pt = {
     ajustesDoSistema: 'Abrir ajustes do sistema',
     abrir: 'Configurações',
     informacoes: 'Informações',
+    backup: {
+      secao: 'Backup',
+      exportar: 'Exportar backup',
+      importar: 'Importar backup',
+      dica: 'Salva treinos, histórico e configurações num arquivo JSON, para guardar ou levar a outro aparelho.',
+      indisponivel: 'Este aparelho não consegue compartilhar arquivos.',
+      erroExportar: 'Não foi possível criar o backup.',
+      invalido: 'Este arquivo não é um backup do joaChrono (ou é de uma versão mais nova do app).',
+      confirmarTitulo: 'Importar backup?',
+      confirmarMsg:
+        '%{treinos} treino(s) e %{registros} registro(s) do histórico. %{substituidos} treino(s) com o mesmo identificador serão substituídos pela versão do arquivo; os demais são mantidos. As configurações do arquivo também serão aplicadas.',
+      importar2: 'Importar',
+      pronto: 'Backup importado.',
+      erroImportar: 'Não foi possível importar o backup.',
+      compartilhar: 'Salvar backup do joaChrono',
+    },
   },
   editar: {
     excluirTitulo: 'Excluir treino?',

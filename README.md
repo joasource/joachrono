@@ -24,6 +24,7 @@ Um cronômetro de exercícios pensado para quem treina com intervalos: HIIT, tab
 - **Histórico:** registra cada treino concluído (ou encerrado depois de 10 s), com total dos últimos 7 dias.
 - **Acessibilidade:** tempo falado por extenso, anúncio de etapas para leitores de tela e contraste revisado.
 - **PT-BR e EN:** segue o idioma do aparelho.
+- **Backup em JSON:** exporta e importa treinos, histórico e configurações (Configurações → Backup).
 - **Dados locais:** tudo fica no aparelho, sem conta e sem rede.
 
 ## Stack

@@ -1,14 +1,50 @@
 import { router } from 'expo-router';
-import { Linking, Pressable, ScrollView, StyleSheet, Text } from 'react-native';
+import { Alert, Linking, Pressable, ScrollView, StyleSheet, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { aplicarBackup, escolherBackup, exportarBackup } from '../backup/arquivo';
+import { resumoDaImportacao } from '../backup/modelo';
 import { CONTAGENS, INTENSIDADES, TIPOS_SINAL, VOLUMES } from '../configuracoes/modelo';
 import { Segmentos } from '../configuracoes/Segmentos';
 import { salvarConfiguracoes, useConfiguracoes } from '../configuracoes/store';
 import { OpcaoSwitch } from '../editor/OpcaoSwitch';
 import { t } from '../i18n/t';
+import { carregarTreinos } from '../treinos/armazenamento';
 import { useSinais } from '../execucao/useSinais';
 import { vibrar } from '../execucao/vibracao';
+
+async function exportar() {
+  try {
+    if ((await exportarBackup(t('config.backup.compartilhar'))) === 'indisponivel') {
+      Alert.alert(t('config.backup.indisponivel'));
+    }
+  } catch {
+    Alert.alert(t('config.backup.erroExportar'));
+  }
+}
+
+async function importar() {
+  try {
+    const escolha = await escolherBackup();
+    if (escolha.tipo === 'cancelado') return;
+    if (escolha.tipo === 'invalido') return Alert.alert(t('config.backup.invalido'));
+    const { backup } = escolha;
+    const r = resumoDaImportacao(await carregarTreinos(), backup);
+    Alert.alert(t('config.backup.confirmarTitulo'), t('config.backup.confirmarMsg', r), [
+      { text: t('geral.cancelar'), style: 'cancel' },
+      {
+        text: t('config.backup.importar2'),
+        onPress: () =>
+          aplicarBackup(backup).then(
+            () => Alert.alert(t('config.backup.pronto')),
+            () => Alert.alert(t('config.backup.erroImportar')),
+          ),
+      },
+    ]);
+  } catch {
+    Alert.alert(t('config.backup.erroImportar'));
+  }
+}
 
 export default function Configuracoes() {
   const insets = useSafeAreaInsets();
@@ -102,6 +138,23 @@ export default function Configuracoes() {
         <Text style={estilos.secundarioTexto}>{t('config.ajustesDoSistema')}</Text>
       </Pressable>
 
+      <Text style={estilos.secao}>{t('config.backup.secao')}</Text>
+      <Text style={estilos.dicaBackup}>{t('config.backup.dica')}</Text>
+      <Pressable
+        accessibilityRole="button"
+        style={estilos.secundario}
+        onPress={() => void exportar()}
+      >
+        <Text style={estilos.secundarioTexto}>{t('config.backup.exportar')}</Text>
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        style={estilos.secundario}
+        onPress={() => void importar()}
+      >
+        <Text style={estilos.secundarioTexto}>{t('config.backup.importar')}</Text>
+      </Pressable>
+
       <Text style={estilos.secao}>{t('config.informacoes')}</Text>
       <Pressable
         accessibilityRole="button"
@@ -131,6 +184,7 @@ const estilos = StyleSheet.create({
   secao: { color: '#9ca3af', fontSize: 14, marginTop: 20, textTransform: 'uppercase' },
   secundario: { minHeight: 48, justifyContent: 'center', marginTop: 8 },
   secundarioTexto: { color: '#60a5fa', fontSize: 16 },
+  dicaBackup: { color: '#9ca3af', fontSize: 13, marginBottom: 4 },
   voltar: {
     minHeight: 56,
     borderRadius: 28,

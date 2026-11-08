@@ -35,3 +35,8 @@ export function registrarExecucao(dados: {
 export function excluirRegistros(ids: ReadonlySet<string>) {
   gravar(semRegistros(carregarHistorico(), ids));
 }
+
+/** Troca o histórico inteiro (usado ao importar um backup). */
+export function substituirHistorico(lista: Registro[]) {
+  gravar(lista);
+}

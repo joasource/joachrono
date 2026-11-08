@@ -49,7 +49,8 @@ Tudo abaixo está commitado, enviado e testado no aparelho pelo Joaquim.
 
 - Feito (2026-11-08): `mixWithOthers` com a tela bloqueada funciona no Redmi (música continua, bipes por cima). Virou a opção "Misturar com a música" (`misturarComMusica`, padrão ligado); desligada usa `doNotMix` e pausa a música. Só testado no Xiaomi/Android, não no iOS nem por mais de poucos minutos.
 - Duplicar treino feito (2026-11-08): na lista, toque longo seleciona e o botão ⧉ copia (`duplicarTreinos` em `modelo.ts`; cópia logo após o original, nome + "(cópia)"). Sem teste em aparelho.
-- Ideias: backup/importação em JSON, screenshots no README.
+- Backup em JSON feito e testado no aparelho (2026-11-08): `src/backup/` (`modelo.ts` puro: formato `joachrono-backup` v1, `lerBackup`, mesclagem por id; `arquivo.ts`: `expo-sharing` para exportar e `expo-document-picker` para importar). Importar mescla treinos (mesmo id → versão do arquivo) e histórico, e troca as configurações. Exige development build com os módulos nativos expo-sharing e expo-document-picker.
+- Ideias: screenshots no README.
 - Decidido (2026-11-08): bundle id/package `app.joachrono` e titular Joaquim Ferreira (pessoa física, licença proprietária) ficam como estão. Por ora só se gera APK Android, sem publicação.
 - Contas: Apple Developer (US$ 99/ano), Google Play (US$ 25).
 

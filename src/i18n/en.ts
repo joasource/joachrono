@@ -107,6 +107,11 @@ export const en: Traducoes = {
         texto:
           'Every completed workout is logged. If you leave before the end, it is only saved after 10 seconds.',
       },
+      {
+        titulo: 'Backup',
+        texto:
+          'In Settings, “Export backup” creates a JSON file with workouts, history and settings. “Import backup” reads that file: workouts with the same identifier are replaced, the others are kept.',
+      },
     ],
   },
   config: {
@@ -134,6 +139,22 @@ export const en: Traducoes = {
     ajustesDoSistema: 'Open system settings',
     abrir: 'Settings',
     informacoes: 'Information',
+    backup: {
+      secao: 'Backup',
+      exportar: 'Export backup',
+      importar: 'Import backup',
+      dica: 'Saves workouts, history and settings to a JSON file, to keep or move to another device.',
+      indisponivel: "This device can't share files.",
+      erroExportar: "Couldn't create the backup.",
+      invalido: "This file isn't a joaChrono backup (or it comes from a newer version of the app).",
+      confirmarTitulo: 'Import backup?',
+      confirmarMsg:
+        '%{treinos} workout(s) and %{registros} history entries. %{substituidos} workout(s) with the same identifier will be replaced by the version in the file; the others are kept. The settings in the file will also be applied.',
+      importar2: 'Import',
+      pronto: 'Backup imported.',
+      erroImportar: "Couldn't import the backup.",
+      compartilhar: 'Save joaChrono backup',
+    },
   },
   editar: {
     excluirTitulo: 'Delete workout?',
