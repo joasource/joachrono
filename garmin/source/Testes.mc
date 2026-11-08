@@ -181,3 +181,78 @@ function testeEdicaoDeNumeroEscolhaEBool(logger as Logger) as Boolean {
     Test.assertEqual(mudarValor(b, 1, 1, 0), 0);
     return true;
 }
+
+function treinoAv(itens as Array<Dictionary>, pular as Number) as Dictionary {
+    return { "m" => "a", "i" => itens, "p" => pular };
+}
+
+(:test)
+function testeAvancadoDesdobraRepeticoes(logger as Logger) as Boolean {
+    var t = treinoAv([
+        { "c" => CAT_AQUECER, "s" => 300 },
+        { "v" => 3, "i" => [{ "c" => CAT_TRABALHO, "s" => 30 }, { "c" => CAT_DESCANSO, "s" => 15 }] as Array<Dictionary> },
+        { "c" => CAT_DESAQUECER, "s" => 300 }
+    ] as Array<Dictionary>, 1);
+    var p = passosAvancados(t);
+    // 1 + 3x2 + 1; o descanso da última rodada fica porque o desaquecimento vem depois.
+    Test.assertEqual(p.size(), 8);
+    Test.assertEqual(contarPassos(t), 8);
+    Test.assertEqual(p[0].cat, CAT_AQUECER);
+    Test.assertEqual(p[5].cat, CAT_TRABALHO);
+    Test.assertEqual(p[5].atual, 3);
+    Test.assertEqual(p[5].total, 3);
+    Test.assertEqual(p[7].cat, CAT_DESAQUECER);
+    Test.assertEqual(duracaoTotal(p), 300 + 3 * 45 + 300);
+    return true;
+}
+
+(:test)
+function testeAvancadoPulaOUltimoDescansoSoNoFim(logger as Logger) as Boolean {
+    var itens = [{ "v" => 2, "i" => [{ "c" => CAT_TRABALHO, "s" => 20 }, { "c" => CAT_DESCANSO, "s" => 10 }] as Array<Dictionary> }] as Array<Dictionary>;
+    Test.assertEqual(passosAvancados(treinoAv(itens, 1)).size(), 3);
+    Test.assertEqual(passosAvancados(treinoAv(itens, 0)).size(), 4);
+    return true;
+}
+
+(:test)
+function testeAvancadoEtapaManualEsperaOToque(logger as Logger) as Boolean {
+    var t = treinoAv([
+        { "c" => CAT_AQUECER, "s" => 5 },
+        { "c" => CAT_LIVRE, "s" => 0 },
+        { "c" => CAT_DESCANSO, "s" => 10 }
+    ] as Array<Dictionary>, 0);
+    var m = new Maquina(passosAvancados(t));
+    m.iniciar(0);
+    var ev = m.tick(60000);
+    Test.assertEqual(ev.size(), 1); // atravessa o aquecimento e para na etapa manual
+    Test.assertEqual(m.indice, 1);
+    Test.assert(m.restanteMs(60000) == null);
+    var av = m.avancar(62000);
+    Test.assertEqual(av[0], EV_TROCA);
+    Test.assertEqual(m.restanteMs(62000), 10000);
+    Test.assertEqual(m.tempoTotalMs(62000), 62000);
+    return true;
+}
+
+(:test)
+function testeNormalizaAvancadoRejeitaLixoEAninhamento(logger as Logger) as Boolean {
+    Test.assert(normalizar({ "m" => "a", "i" => [] }) == null);
+    Test.assert(normalizar({ "m" => "a", "i" => "x" }) == null);
+    var n = normalizar({
+        "m" => "a",
+        "i" => [
+            { "c" => 99, "s" => -5 },
+            { "v" => 500, "i" => [{ "c" => 1, "s" => 20 }, { "v" => 2, "i" => [{ "c" => 1, "s" => 5 }] }] },
+            { "v" => 3, "i" => [] },
+            42
+        ]
+    });
+    Test.assert(n != null);
+    var itens = (n as Dictionary)["i"] as Array<Dictionary>;
+    Test.assertEqual(itens.size(), 2); // a repetição vazia e o lixo caem fora
+    Test.assertEqual(itens[0]["c"], 4); // categoria limitada
+    Test.assertEqual(itens[0]["s"], 0); // segundos limitados
+    Test.assertEqual(itens[1]["v"], 99); // vezes limitadas
+    Test.assertEqual((itens[1]["i"] as Array).size(), 1); // repetição dentro de repetição não entra
+    return true;
+}

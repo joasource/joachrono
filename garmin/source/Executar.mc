@@ -17,7 +17,7 @@ class ExecutarView extends WatchUi.View {
 
     function initialize(treino as Dictionary) {
         View.initialize();
-        _maq = new Maquina(passosDeRounds(treino));
+        _maq = new Maquina(passosDe(treino));
         _timer = new Timer.Timer();
     }
 

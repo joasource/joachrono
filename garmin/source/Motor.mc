@@ -70,6 +70,46 @@ function passosDeRounds(t as Dictionary) as Array<Passo> {
     return l;
 }
 
+// Equivale a compilar(treino avançado): desdobra as repetições (um nível) e tira os descansos que
+// sobrariam no fim, se o treino pede para pular o último descanso.
+function passosAvancados(t as Dictionary) as Array<Passo> {
+    var itens = t["i"] as Array<Dictionary>;
+    var l = [] as Array<Passo>;
+    for (var i = 0; i < itens.size(); i++) {
+        var it = itens[i];
+        if (it["v"] != null) {
+            var vezes = it["v"] as Number;
+            var filhos = it["i"] as Array<Dictionary>;
+            for (var n = 1; n <= vezes; n++) {
+                for (var j = 0; j < filhos.size(); j++) {
+                    l.add(new Passo(filhos[j]["c"] as Number, filhos[j]["s"] as Number, n, vezes));
+                }
+            }
+        } else {
+            l.add(new Passo(it["c"] as Number, it["s"] as Number, 0, 0));
+        }
+    }
+    if ((t["p"] as Number) != 0) {
+        while (l.size() > 1 && l[l.size() - 1].cat == CAT_DESCANSO) {
+            l = l.slice(0, l.size() - 1) as Array<Passo>;
+        }
+    }
+    return l;
+}
+
+// Quantos passos o treino tem depois de desdobrado (sem montar os objetos).
+function contarPassos(t as Dictionary) as Number {
+    if (!ehAvancado(t)) {
+        return passosDeRounds(t).size();
+    }
+    var itens = t["i"] as Array<Dictionary>;
+    var n = 0;
+    for (var i = 0; i < itens.size(); i++) {
+        n += (itens[i]["v"] != null) ? (itens[i]["v"] as Number) * (itens[i]["i"] as Array).size() : 1;
+    }
+    return n;
+}
+
 // Soma dos passos por tempo, em segundos.
 function duracaoTotal(passos as Array<Passo>) as Number {
     var s = 0;

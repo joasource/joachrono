@@ -45,4 +45,22 @@
     <string id="CatDescanso">Rest</string>
     <string id="CatDesaquecer">Cool-down</string>
     <string id="CatLivre">Free</string>
+    <string id="Avancado">Advanced</string>
+    <string id="NovoAvancado">+ Advanced workout</string>
+    <string id="AddEtapa">+ Step</string>
+    <string id="AddRepeticao">+ Repeat</string>
+    <string id="Salvar">Save</string>
+    <string id="Subir">Move up</string>
+    <string id="Descer">Move down</string>
+    <string id="AddDentro">Add step inside</string>
+    <string id="TituloEtapa">Step</string>
+    <string id="TituloRepeticao">Repeat</string>
+    <string id="TituloAvancado">Advanced</string>
+    <string id="Repetir">Repeat</string>
+    <string id="Vezes">Times</string>
+    <string id="FimManual">manual</string>
+    <string id="ErroVazio">Add at least one step</string>
+    <string id="ErroLimite">Too many steps</string>
+    <string id="ContinuarEditando">Keep editing</string>
+    <string id="DescartarAlteracoes">Discard changes</string>
 </strings>

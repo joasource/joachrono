@@ -16,11 +16,11 @@ function preencherMenu(menu as WatchUi.Menu2) as Void {
     var lista = lerTreinos();
     for (var i = 0; i < lista.size(); i++) {
         var t = lista[i];
-        var total = formatarTempo(duracaoTotal(passosDeRounds(t)));
-        var sub = (WatchUi.loadResource(Rez.Strings.Total) as String) + total;
+        var sub = (WatchUi.loadResource(Rez.Strings.Total) as String) + textoTotal(t);
         menu.addItem(new WatchUi.MenuItem(resumo(t), sub, i, null));
     }
     menu.addItem(new WatchUi.MenuItem(Rez.Strings.NovoTreino, null, "novo", null));
+    menu.addItem(new WatchUi.MenuItem(Rez.Strings.NovoAvancado, null, "novoav", null));
     menu.addItem(new WatchUi.MenuItem(Rez.Strings.CronometroLivre, null, "livre", null));
     menu.addItem(new WatchUi.MenuItem(Rez.Strings.Configuracoes, null, "cfg", null));
 }
@@ -40,6 +40,8 @@ class ListaDelegate extends WatchUi.Menu2InputDelegate {
             WatchUi.pushView(menu, new AcaoDelegate(id as Number), WatchUi.SLIDE_LEFT);
         } else if ("novo".equals(id)) {
             abrirEditorSimples(-1, treinoPadrao(), false);
+        } else if ("novoav".equals(id)) {
+            abrirEditorAvancado(-1, novoAvancado(), false);
         } else if ("livre".equals(id)) {
             var v = new LivreView();
             WatchUi.pushView(v, new LivreDelegate(v), WatchUi.SLIDE_LEFT);
@@ -72,7 +74,11 @@ class AcaoDelegate extends WatchUi.Menu2InputDelegate {
             var v = new ExecutarView(lista[_indice]);
             WatchUi.switchToView(v, new ExecutarDelegate(v), WatchUi.SLIDE_LEFT);
         } else if ("editar".equals(id)) {
-            abrirEditorSimples(_indice, lista[_indice], true);
+            if (ehAvancado(lista[_indice])) {
+                abrirEditorAvancado(_indice, lista[_indice], true);
+            } else {
+                abrirEditorSimples(_indice, lista[_indice], true);
+            }
         } else if ("excluir".equals(id)) {
             lista.remove(lista[_indice]);
             salvarTreinos(lista);

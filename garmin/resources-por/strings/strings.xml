@@ -45,4 +45,22 @@
     <string id="CatDescanso">Descanso</string>
     <string id="CatDesaquecer">Desaquecer</string>
     <string id="CatLivre">Livre</string>
+    <string id="Avancado">Avançado</string>
+    <string id="NovoAvancado">+ Treino avançado</string>
+    <string id="AddEtapa">+ Etapa</string>
+    <string id="AddRepeticao">+ Repetição</string>
+    <string id="Salvar">Salvar</string>
+    <string id="Subir">Subir</string>
+    <string id="Descer">Descer</string>
+    <string id="AddDentro">Adicionar etapa dentro</string>
+    <string id="TituloEtapa">Etapa</string>
+    <string id="TituloRepeticao">Repetição</string>
+    <string id="TituloAvancado">Avançado</string>
+    <string id="Repetir">Repetir</string>
+    <string id="Vezes">Vezes</string>
+    <string id="FimManual">manual</string>
+    <string id="ErroVazio">Adicione ao menos uma etapa</string>
+    <string id="ErroLimite">Etapas demais</string>
+    <string id="ContinuarEditando">Continuar editando</string>
+    <string id="DescartarAlteracoes">Descartar alterações</string>
 </strings>

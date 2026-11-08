@@ -6,19 +6,21 @@ App Connect IQ (Monkey C, `watch-app`) que porta o motor do joaChrono para o rel
 
 - Lista de treinos do **modo simples** (rounds, trabalho, descanso, aquecimento, desaquecimento, pular último descanso), guardados no relógio. Vêm 3 exemplos na primeira execução.
 - Editor no relógio (`Form.mc`): minutos e segundos separados, números exatos (1 s, 1 min), UP/DOWN mudam o valor e **segurar repete cada vez mais rápido**, START avança (minutos → segundos → próximo campo, e salva no último), BACK volta.
+- **Modo avançado** (`Avancado.mc`): "+ Treino avançado" abre uma lista de etapas (aquecer, trabalho, descanso, desaquecer, livre) e blocos "Repetir N×" (um nível, como no app). Cada linha abre ações: editar, subir, descer, excluir e, no bloco, adicionar etapa dentro. Tempo 0:00 = fim manual (DOWN avança). BACK pergunta antes de descartar. Limites: 40 itens e 500 etapas desdobradas.
 - Treino: START pausa/retoma, DOWN próxima etapa, UP volta (reinicia a etapa depois de 3 s), BACK abre o menu Continuar / Salvar e sair / Descartar e sair. Trabalho aparece em fundo branco, o resto em fundo preto.
 - **Cronômetro livre** (item da lista): START inicia/pausa, DOWN marca volta (mostra as duas últimas), BACK abre o mesmo menu de saída; grava a atividade com as voltas.
 - Bipe e vibração nas trocas, contagem regressiva (0/3/5/10 s) e luz acesa na troca. Configurações no menu da lista.
 - Grava a sessão (permissão `Fit`) como Treino/Cardio, com frequência cardíaca, no Garmin Connect.
 - PT-BR e EN (`resources-por/`).
 
-Fora da v1: sincronizar treinos do celular, modo avançado (blocos "Repetir"), histórico no relógio.
+Fora da v1: sincronizar treinos do celular e histórico no relógio.
 
 ## Estrutura
 
 ```
 source/Motor.mc       porte de src/motor (passos, máquina de estados, tempo por timestamps)
 source/Testes.mc      testes do motor (portados de motor.test.ts)
+source/Avancado.mc    editor do modo avançado (etapas e blocos Repetir)
 source/Form.mc        formulário de edição (número, tempo mm:ss, escolha, sim/não) com repetição ao segurar
 source/Treinos.mc     treinos e configurações em Application.Storage
 source/Lista.mc       lista de treinos, ações e configurações (Menu2)
@@ -44,4 +46,4 @@ Conecte o relógio por USB e copie o `joachrono.prg` para `GARMIN/APPS/` (em Lin
 ## Pendências
 
 - Instalado e testado no Instinct 2X real (funcionou).
-- Fase 2: sincronizar treinos do celular (Connect IQ Mobile SDK no app Expo, exige novo development build), modo avançado.
+- Fase 2: sincronizar treinos do celular (Connect IQ Mobile SDK no app Expo, exige novo development build).
