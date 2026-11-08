@@ -99,14 +99,24 @@ export default function Inicio() {
           <Text style={estilos.titulo} accessibilityRole="header">
             joaChrono
           </Text>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t('config.abrir')}
-            onPress={() => router.push('/configuracoes')}
-            style={estilos.engrenagem}
-          >
-            <Text style={estilos.engrenagemTexto}>⚙</Text>
-          </Pressable>
+          <View style={estilos.acoes}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('historico.abrir')}
+              onPress={() => router.push('/historico')}
+              style={estilos.engrenagem}
+            >
+              <Text style={estilos.engrenagemTexto}>🕘</Text>
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t('config.abrir')}
+              onPress={() => router.push('/configuracoes')}
+              style={estilos.engrenagem}
+            >
+              <Text style={estilos.engrenagemTexto}>⚙</Text>
+            </Pressable>
+          </View>
         </View>
       )}
       <FlatList
@@ -180,6 +190,7 @@ const estilos = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 16,
   },
+  acoes: { flexDirection: 'row' },
   titulo: { color: '#fff', fontSize: 32, fontWeight: '700' },
   contagem: { flex: 1, color: '#fff', fontSize: 20, fontWeight: '600', marginLeft: 8 },
   engrenagem: { minWidth: 48, minHeight: 48, alignItems: 'center', justifyContent: 'center' },

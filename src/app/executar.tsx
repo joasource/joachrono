@@ -1,6 +1,6 @@
 import { useKeepAwake } from 'expo-keep-awake';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -16,6 +16,7 @@ import {
 import { useLinhaDoTempo } from '../execucao/useLinhaDoTempo';
 import { pedirPermissaoNotificacoes, useNotificacoesDaExecucao } from '../execucao/notificacoes';
 import { useExecucao } from '../execucao/useExecucao';
+import { registrarExecucao } from '../historico/armazenamento';
 import { carregarTreinos } from '../treinos/armazenamento';
 import { paraTreino } from '../treinos/modelo';
 import {
@@ -91,6 +92,43 @@ function Execucao({ treino }: { treino: Treino }) {
   const pronto = estado.status === 'pronto';
   const concluido = estado.status === 'concluido';
   const pausado = estado.status === 'pausado';
+
+  // Histórico: grava ao concluir; se a pessoa sai antes, grava ao desmontar (parcial, ≥ 10 s).
+  // O exemplo (sem treino salvo) não entra. `Refazer` volta a permitir um novo registro.
+  const registrado = useRef(false);
+  const ultimo = useRef({ estado, treino });
+  useEffect(() => {
+    ultimo.current = { estado, treino };
+  });
+  useEffect(() => {
+    if (!concluido) {
+      registrado.current = false;
+      return;
+    }
+    if (registrado.current || treino.id === 'exemplo') return;
+    registrado.current = true;
+    registrarExecucao({
+      treinoId: treino.id,
+      nome: treino.nome,
+      duracaoMs: tempoTotalMs(estado, Date.now()),
+      concluido: true,
+    });
+  }, [concluido, estado, treino]);
+  useEffect(
+    () => () => {
+      const { estado: e, treino: tr } = ultimo.current;
+      if (registrado.current || tr.id === 'exemplo') return;
+      if (e.status === 'pronto' || e.status === 'concluido') return;
+      registrarExecucao({
+        treinoId: tr.id,
+        nome: tr.nome,
+        duracaoMs: tempoTotalMs(e, Date.now()),
+        concluido: false,
+      });
+    },
+    [],
+  );
+
   const fundo = pronto ? COR_PRONTO : concluido ? COR_CONCLUIDO : aparencia.fundo;
 
   const restante = restanteMs(estado, agora);
@@ -125,7 +163,9 @@ function Execucao({ treino }: { treino: Treino }) {
         </Pressable>
         <Text
           style={estilos.total}
-          accessibilityLabel={t('executar.total', { tempo: tempoFalado(tempoTotalMs(estado, agora)) })}
+          accessibilityLabel={t('executar.total', {
+            tempo: tempoFalado(tempoTotalMs(estado, agora)),
+          })}
         >
           {t('executar.total', { tempo: formatarTempo(tempoTotalMs(estado, agora)) })}
         </Text>
