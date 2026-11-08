@@ -120,3 +120,24 @@ function testeVoltarReiniciaDepoisDe3sEVoltaUmaAntes(logger as Logger) as Boolea
     Test.assertEqual(m.tempoTotalMs(26000), 0);
     return true;
 }
+
+(:test)
+function testeLivreContaPausaEMarcaVoltas(logger as Logger) as Boolean {
+    var l = new Livre();
+    Test.assertEqual(l.decorridoMs(5000), 0);
+    l.volta(1000); // parado: ignora
+    Test.assertEqual(l.marcas.size(), 0);
+    l.iniciar(1000);
+    Test.assertEqual(l.decorridoMs(6000), 5000);
+    l.volta(11000);
+    l.volta(31000);
+    l.pausar(41000);
+    Test.assertEqual(l.decorridoMs(99000), 40000);
+    l.volta(50000); // pausado: ignora
+    Test.assertEqual(l.marcas.size(), 2);
+    Test.assertEqual(l.duracaoDaVolta(0), 10000);
+    Test.assertEqual(l.duracaoDaVolta(1), 20000);
+    l.iniciar(100000);
+    Test.assertEqual(l.decorridoMs(105000), 45000);
+    return true;
+}

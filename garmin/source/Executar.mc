@@ -312,9 +312,10 @@ class ExecutarDelegate extends WatchUi.BehaviorDelegate {
 }
 
 class SaidaDelegate extends WatchUi.Menu2InputDelegate {
-    private var _view as ExecutarView;
+    // Serve ao treino e ao cronômetro livre: ambos têm continuar/sairSalvando/sairDescartando.
+    private var _view as ExecutarView or LivreView;
 
-    function initialize(view as ExecutarView) {
+    function initialize(view as ExecutarView or LivreView) {
         Menu2InputDelegate.initialize();
         _view = view;
     }

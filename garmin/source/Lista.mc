@@ -21,6 +21,7 @@ function preencherMenu(menu as WatchUi.Menu2) as Void {
         menu.addItem(new WatchUi.MenuItem(resumo(t), sub, i, null));
     }
     menu.addItem(new WatchUi.MenuItem(Rez.Strings.NovoTreino, null, "novo", null));
+    menu.addItem(new WatchUi.MenuItem(Rez.Strings.CronometroLivre, null, "livre", null));
     menu.addItem(new WatchUi.MenuItem(Rez.Strings.Configuracoes, null, "cfg", null));
 }
 
@@ -40,6 +41,9 @@ class ListaDelegate extends WatchUi.Menu2InputDelegate {
         } else if ("novo".equals(id)) {
             var v = new EditarView(-1, treinoPadrao());
             WatchUi.pushView(v, new EditarDelegate(v), WatchUi.SLIDE_LEFT);
+        } else if ("livre".equals(id)) {
+            var v = new LivreView();
+            WatchUi.pushView(v, new LivreDelegate(v), WatchUi.SLIDE_LEFT);
         } else if ("cfg".equals(id)) {
             var menu = new WatchUi.Menu2({ :title => Rez.Strings.Configuracoes });
             menu.addItem(new WatchUi.ToggleMenuItem(Rez.Strings.Som, null, "som", configSom(), null));

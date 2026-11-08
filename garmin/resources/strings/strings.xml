@@ -33,4 +33,6 @@
     <string id="Desligado">Off</string>
     <string id="TituloEditar">Edit workout</string>
     <string id="DicaEditar">UP/DOWN · START next</string>
+    <string id="CronometroLivre">Free stopwatch</string>
+    <string id="Volta">Lap</string>
 </strings>

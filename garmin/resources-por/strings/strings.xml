@@ -33,4 +33,6 @@
     <string id="Desligado">Desligado</string>
     <string id="TituloEditar">Editar treino</string>
     <string id="DicaEditar">UP/DOWN · START avança</string>
+    <string id="CronometroLivre">Cronômetro livre</string>
+    <string id="Volta">Volta</string>
 </strings>
