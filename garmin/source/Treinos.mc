@@ -70,7 +70,7 @@ function normalizarAvancado(b as Dictionary) as Dictionary? {
 }
 
 function novoAvancado() as Dictionary {
-    return { "m" => "a", "i" => [{ "c" => CAT_TRABALHO, "s" => 30 }] as Array<Dictionary>, "p" => 1 };
+    return { "m" => "a", "i" => [] as Array<Dictionary>, "p" => 1 };
 }
 
 // Dados vindos do disco são tratados como não confiáveis, como no app.
