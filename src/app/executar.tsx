@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { APARENCIA, COR_CONCLUIDO, COR_PRONTO, formatarTempo } from '../execucao/aparencia';
+import { useLinhaDoTempo } from '../execucao/useLinhaDoTempo';
 import { pedirPermissaoNotificacoes, useNotificacoesDaExecucao } from '../execucao/notificacoes';
 import { useExecucao } from '../execucao/useExecucao';
 import { carregarTreinos } from '../treinos/armazenamento';
@@ -75,6 +76,7 @@ function Execucao({ treino }: { treino: Treino }) {
   const { estado, agora, acoes } = useExecucao(passos);
   const [notificar, setNotificar] = useState(false);
   useNotificacoesDaExecucao(estado, notificar);
+  useLinhaDoTempo(estado);
 
   const passo = passoAtual(estado);
   const aparencia = APARENCIA[passo.categoria];

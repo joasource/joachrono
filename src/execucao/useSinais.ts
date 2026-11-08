@@ -2,6 +2,8 @@ import { setAudioModeAsync, useAudioPlayer } from 'expo-audio';
 import * as Haptics from 'expo-haptics';
 import { useCallback, useEffect } from 'react';
 
+import { somNativo } from './somNativo';
+
 const SOM_CONTAGEM = require('../../assets/sons/contagem.wav');
 const SOM_TROCA = require('../../assets/sons/troca.wav');
 const SOM_FIM = require('../../assets/sons/fim.wav');
@@ -20,6 +22,7 @@ export function useSinais() {
   }, []);
 
   const tocar = (player: { seekTo: (s: number) => Promise<void>; play: () => void }) => {
+    if (somNativo.ativo) return;
     try {
       void player.seekTo(0);
       player.play();
