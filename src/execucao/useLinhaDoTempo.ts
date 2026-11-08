@@ -72,6 +72,7 @@ export function useLinhaDoTempo(estado: Estado) {
         const linha = gerarLinhaDoTempoWav(estadoRef.current, t0, {
           ganho: GANHO_DO_VOLUME[c.volume],
           contagemSegundos: c.contagemSegundos,
+          tipoSinal: c.tipoSinal,
         });
         if (!linha) return parar();
         const { wav, instantes } = linha;

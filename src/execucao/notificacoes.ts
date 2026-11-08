@@ -8,6 +8,7 @@ import { useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
 
 import { proximasTransicoes, type Estado } from '../motor';
+import { INTENSIDADES, VIBRACAO_NOTIFICACAO } from '../configuracoes/modelo';
 import { obterConfiguracoes } from '../configuracoes/store';
 import { t } from '../i18n/t';
 import { APARENCIA } from './aparencia';
@@ -16,7 +17,12 @@ import { APARENCIA } from './aparencia';
 // plano o JS pode ser suspenso, mas o sistema entrega o alerta na hora certa. O iOS guarda no máximo
 // 64 agendadas, então agendamos só as próximas e reagendamos a cada mudança de estado.
 // Canais Android são imutáveis depois de criados: ao mudar som/importância, troque o id (v2...).
-const CANAIS_ANTIGOS = ['etapas-v2', 'etapas-v4', 'etapas-v5'];
+const CANAIS_ANTIGOS = [
+  'etapas-v2',
+  'etapas-v4',
+  'etapas-v5',
+  ...['s', 'm'].flatMap((som) => ['v', 'n'].map((vib) => `etapas-v6-${som}${vib}`)),
+];
 
 /**
  * A notificação só toca o som do sistema quando o áudio nativo da linha do tempo não está
@@ -26,7 +32,9 @@ const CANAIS_ANTIGOS = ['etapas-v2', 'etapas-v4', 'etapas-v5'];
 function configDoCanal() {
   const c = obterConfiguracoes();
   const som = c.som && !c.sinaisBloqueado;
-  return { som, vibracao: c.vibracao, id: `etapas-v6-${som ? 's' : 'm'}${c.vibracao ? 'v' : 'n'}` };
+  const vibracao = c.vibracao ? VIBRACAO_NOTIFICACAO[c.intensidadeVibracao] : null;
+  const sufixoVibracao = c.vibracao ? String(INTENSIDADES.indexOf(c.intensidadeVibracao) + 1) : 'n';
+  return { som, vibracao, id: `etapas-v7-${som ? 's' : 'm'}${sufixoVibracao}` };
 }
 const MAX_AGENDADAS = 30;
 
@@ -51,9 +59,9 @@ async function garantirCanal() {
     // Sem `sound` o módulo usa o som padrão do sistema ('default' seria lido como um arquivo
     // inexistente e deixaria o canal mudo). `null` = mudo.
     ...(som ? { audioAttributes: { usage: AndroidAudioUsage.ALARM } } : { sound: null }),
-    enableVibrate: vibracao,
+    enableVibrate: vibracao !== null,
     lockscreenVisibility: AndroidNotificationVisibility.PUBLIC,
-    ...(vibracao ? { vibrationPattern: [0, 250, 150, 250] } : {}),
+    ...(vibracao ? { vibrationPattern: vibracao } : {}),
   });
 }
 

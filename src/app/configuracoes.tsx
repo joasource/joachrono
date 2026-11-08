@@ -2,15 +2,19 @@ import { router } from 'expo-router';
 import { Linking, Pressable, ScrollView, StyleSheet, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { CONTAGENS, VOLUMES } from '../configuracoes/modelo';
+import { CONTAGENS, INTENSIDADES, TIPOS_SINAL, VOLUMES } from '../configuracoes/modelo';
 import { Segmentos } from '../configuracoes/Segmentos';
 import { salvarConfiguracoes, useConfiguracoes } from '../configuracoes/store';
 import { OpcaoSwitch } from '../editor/OpcaoSwitch';
 import { t } from '../i18n/t';
+import { useSinais } from '../execucao/useSinais';
+import { vibrar } from '../execucao/vibracao';
 
 export default function Configuracoes() {
   const insets = useSafeAreaInsets();
   const c = useConfiguracoes();
+  // Ao mudar o tipo de sinal ou a intensidade, toca/vibra uma prévia (o store já guardou a escolha).
+  const { sinalTroca } = useSinais();
 
   return (
     <ScrollView
@@ -37,6 +41,16 @@ export default function Configuracoes() {
         opcoes={VOLUMES.map((v) => ({ valor: v, rotulo: t(`config.volumes.${v}`) }))}
       />
       <Segmentos
+        rotulo={t('config.tipoSinal')}
+        desativado={!c.som}
+        valor={c.tipoSinal}
+        onChange={(tipoSinal) => {
+          salvarConfiguracoes({ tipoSinal });
+          sinalTroca();
+        }}
+        opcoes={TIPOS_SINAL.map((v) => ({ valor: v, rotulo: t(`config.tipos.${v}`) }))}
+      />
+      <Segmentos
         rotulo={t('config.contagem')}
         valor={c.contagemSegundos}
         onChange={(contagemSegundos) => salvarConfiguracoes({ contagemSegundos })}
@@ -49,6 +63,16 @@ export default function Configuracoes() {
         rotulo={t('config.vibracao')}
         valor={c.vibracao}
         onChange={(vibracao) => salvarConfiguracoes({ vibracao })}
+      />
+      <Segmentos
+        rotulo={t('config.intensidade')}
+        desativado={!c.vibracao}
+        valor={c.intensidadeVibracao}
+        onChange={(intensidadeVibracao) => {
+          salvarConfiguracoes({ intensidadeVibracao });
+          vibrar('troca', intensidadeVibracao);
+        }}
+        opcoes={INTENSIDADES.map((v) => ({ valor: v, rotulo: t(`config.intensidades.${v}`) }))}
       />
 
       <Text style={estilos.secao}>{t('config.telaBloqueada')}</Text>

@@ -1,3 +1,4 @@
+import type { TipoSinal } from '../configuracoes/modelo';
 import { proximasTransicoes, type Estado } from '../motor';
 
 // Com a tela bloqueada o JS é suspenso, mas o player nativo continua. Então geramos um áudio com o
@@ -70,6 +71,33 @@ function gongo(dados: Uint8Array, inicioMs: number, ganho: number) {
   }
 }
 
+// Bipe (alternativa ao gongo): troca = 1 bipe longo, fim = 3 bipes curtos. Mesmos números dos
+// arquivos `assets/sons/troca-bipe.wav` e `fim-bipe.wav`, que tocam quando é o JS que soa.
+export const BIPE_HZ = 1320;
+export const BIPE_TROCA = [{ inicioMs: 0, duracaoMs: 500 }];
+export const BIPE_FIM = [
+  { inicioMs: 0, duracaoMs: 250 },
+  { inicioMs: 400, duracaoMs: 250 },
+  { inicioMs: 800, duracaoMs: 250 },
+];
+
+function sinalDeTroca(
+  dados: Uint8Array,
+  inicioMs: number,
+  fim: boolean,
+  tipo: TipoSinal,
+  ganho: number,
+) {
+  if (tipo === 'bipe') {
+    for (const b of fim ? BIPE_FIM : BIPE_TROCA)
+      bipe(dados, inicioMs + b.inicioMs, BIPE_HZ, b.duracaoMs, ganho);
+    return;
+  }
+  // Gongo: uma batida na troca; duas no fim do treino.
+  gongo(dados, inicioMs, ganho);
+  if (fim) gongo(dados, inicioMs + 900, ganho);
+}
+
 /**
  * Áudio com os sinais de todas as trocas por tempo a partir de `agora` (até `LIMITE_MS` ou a
  * primeira etapa de fim manual). O instante 0 do arquivo é `agora`; `instantes` são os horários
@@ -78,7 +106,11 @@ function gongo(dados: Uint8Array, inicioMs: number, ganho: number) {
 export function gerarLinhaDoTempoWav(
   estado: Estado,
   agora: number,
-  { ganho = 1, contagemSegundos = 3 }: { ganho?: number; contagemSegundos?: number } = {},
+  {
+    ganho = 1,
+    contagemSegundos = 3,
+    tipoSinal = 'gongo',
+  }: { ganho?: number; contagemSegundos?: number; tipoSinal?: TipoSinal } = {},
 ): { wav: Uint8Array; instantes: number[] } | null {
   const transicoes = proximasTransicoes(estado, agora, 5000).filter(
     (t) => t.em - agora <= LIMITE_MS,
@@ -100,9 +132,7 @@ export function gerarLinhaDoTempoWav(
       // Não encosta no sinal da troca anterior nem começa antes de agora.
       if (inicio >= 0 && inicio >= anteriorMs + 500) bipe(dados, inicio, 880, 120, ganho);
     }
-    // Troca: uma batida; fim do treino: duas.
-    gongo(dados, alvo, ganho);
-    if (t.evento.tipo === 'fim') gongo(dados, alvo + 900, ganho);
+    sinalDeTroca(dados, alvo, t.evento.tipo === 'fim', tipoSinal, ganho);
     anteriorMs = alvo;
   }
   return { wav: arquivo, instantes: transicoes.map((t) => t.em) };

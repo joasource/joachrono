@@ -1,20 +1,24 @@
 import { setAudioModeAsync, useAudioPlayer } from 'expo-audio';
-import * as Haptics from 'expo-haptics';
 import { useCallback, useEffect } from 'react';
 
 import { GANHO_DO_VOLUME } from '../configuracoes/modelo';
 import { obterConfiguracoes } from '../configuracoes/store';
 import { somNativo } from './somNativo';
+import { vibrar } from './vibracao';
 
 const SOM_CONTAGEM = require('../../assets/sons/contagem.wav');
 const SOM_TROCA = require('../../assets/sons/troca.wav');
 const SOM_FIM = require('../../assets/sons/fim.wav');
+const SOM_TROCA_BIPE = require('../../assets/sons/troca-bipe.wav');
+const SOM_FIM_BIPE = require('../../assets/sons/fim-bipe.wav');
 
 /** Som + vibração da execução. Falhas de áudio/vibração nunca podem derrubar o cronômetro. */
 export function useSinais() {
   const contagem = useAudioPlayer(SOM_CONTAGEM);
   const troca = useAudioPlayer(SOM_TROCA);
   const fim = useAudioPlayer(SOM_FIM);
+  const trocaBipe = useAudioPlayer(SOM_TROCA_BIPE);
+  const fimBipe = useAudioPlayer(SOM_FIM_BIPE);
 
   useEffect(() => {
     // Sons curtos: tocam mesmo no modo silencioso do iPhone e sem calar a música da pessoa.
@@ -39,21 +43,21 @@ export function useSinais() {
 
   const sinalContagem = useCallback(() => {
     tocar(contagem);
-    if (obterConfiguracoes().vibracao)
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    const c = obterConfiguracoes();
+    if (c.vibracao) vibrar('contagem', c.intensidadeVibracao);
   }, [contagem]);
 
   const sinalTroca = useCallback(() => {
-    tocar(troca);
-    if (obterConfiguracoes().vibracao)
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(() => {});
-  }, [troca]);
+    const c = obterConfiguracoes();
+    tocar(c.tipoSinal === 'bipe' ? trocaBipe : troca);
+    if (c.vibracao) vibrar('troca', c.intensidadeVibracao);
+  }, [troca, trocaBipe]);
 
   const sinalFim = useCallback(() => {
-    tocar(fim);
-    if (obterConfiguracoes().vibracao)
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
-  }, [fim]);
+    const c = obterConfiguracoes();
+    tocar(c.tipoSinal === 'bipe' ? fimBipe : fim);
+    if (c.vibracao) vibrar('fim', c.intensidadeVibracao);
+  }, [fim, fimBipe]);
 
   return { sinalContagem, sinalTroca, sinalFim };
 }

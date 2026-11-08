@@ -61,3 +61,32 @@ describe('gerarLinhaDoTempoWav', () => {
     expect(pico(dados({ ganho: 0.35 }))).toBeLessThan(pico(dados({ ganho: 1 })));
   });
 });
+
+describe('tipo de sinal', () => {
+  const ativoEm = (r: { wav: Uint8Array }, ms: number) => {
+    const dados = r.wav.subarray(44);
+    const i = Math.round((ms * TAXA_HZ) / 1000);
+    return dados.subarray(i, i + 100).some((b) => b !== 128);
+  };
+
+  it('bipe: troca com 1 bipe longo de 500 ms e silêncio depois', () => {
+    const r = gerarLinhaDoTempoWav(estadoIniciado(0), 0, { tipoSinal: 'bipe' })!;
+    expect(ativoEm(r, 10100)).toBe(true);
+    expect(ativoEm(r, 10450)).toBe(true);
+    expect(ativoEm(r, 10700)).toBe(false); // o gongo ainda soaria aqui
+  });
+
+  it('gongo continua sendo o padrão e soa por mais tempo', () => {
+    const r = gerarLinhaDoTempoWav(estadoIniciado(0), 0)!;
+    expect(ativoEm(r, 10700)).toBe(true);
+  });
+
+  it('bipe: o fim do treino tem 3 bipes', () => {
+    const r = gerarLinhaDoTempoWav(estadoIniciado(0), 0, { tipoSinal: 'bipe' })!;
+    const fim = r.instantes[r.instantes.length - 1] - 0;
+    expect(ativoEm(r, fim + 100)).toBe(true);
+    expect(ativoEm(r, fim + 325)).toBe(false); // intervalo entre o 1º e o 2º
+    expect(ativoEm(r, fim + 500)).toBe(true); // 2º
+    expect(ativoEm(r, fim + 900)).toBe(true); // 3º
+  });
+});
