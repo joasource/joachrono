@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Joachrono",
+    "name": "joaChrono",
     "slug": "joachrono",
     "scheme": "joachrono",
     "version": "0.1.0",
@@ -18,9 +18,16 @@
         { "supportedLocales": { "ios": ["pt", "en"], "android": ["pt", "en"] } }
       ]
     ],
+    "locales": {
+      "pt": "./locales/pt.json",
+      "en": "./locales/en.json"
+    },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.joachrono"
+      "bundleIdentifier": "app.joachrono",
+      "infoPlist": {
+        "CFBundleAllowMixedLocalizations": true
+      }
     },
     "android": {
       "package": "app.joachrono",

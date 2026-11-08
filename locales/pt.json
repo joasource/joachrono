@@ -1,0 +1,4 @@
+{
+  "ios": { "CFBundleDisplayName": "joaChrono" },
+  "android": { "app_name": "joaChrono" }
+}

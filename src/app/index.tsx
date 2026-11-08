@@ -23,7 +23,7 @@ export default function Inicio() {
     <View style={[estilos.tela, { paddingTop: insets.top + 16, paddingBottom: insets.bottom }]}>
       <View style={estilos.topo}>
         <Text style={estilos.titulo} accessibilityRole="header">
-          Joachrono
+          joaChrono
         </Text>
         <Pressable
           accessibilityRole="button"

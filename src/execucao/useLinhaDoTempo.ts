@@ -21,7 +21,7 @@ async function aplicarModo(p: AudioPlayer, segundoPlano: boolean) {
     interruptionMode: segundoPlano ? 'doNotMix' : 'mixWithOthers',
   });
   if (segundoPlano) {
-    p.setActiveForLockScreen(true, { title: 'Joachrono', artist: t('aviso.emAndamento') });
+    p.setActiveForLockScreen(true, { title: 'joaChrono', artist: t('aviso.emAndamento') });
   } else {
     p.setActiveForLockScreen(false);
   }
