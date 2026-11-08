@@ -1,0 +1,36 @@
+<strings>
+    <string id="AppName">joaChrono</string>
+    <string id="Aquecer">AQUECER</string>
+    <string id="Trabalho">TRABALHO</string>
+    <string id="Descanso">DESCANSO</string>
+    <string id="Desaquecer">DESAQUECER</string>
+    <string id="Livre">LIVRE</string>
+    <string id="Pronto">PRONTO</string>
+    <string id="Concluido">CONCLUÍDO</string>
+    <string id="Pausado">PAUSADO</string>
+    <string id="Proxima">Próx: </string>
+    <string id="Total">Total </string>
+    <string id="IniciarDica">START para iniciar</string>
+    <string id="NovoTreino">+ Novo treino</string>
+    <string id="Configuracoes">Configurações</string>
+    <string id="Iniciar">Iniciar</string>
+    <string id="Editar">Editar</string>
+    <string id="Excluir">Excluir</string>
+    <string id="Continuar">Continuar</string>
+    <string id="SalvarSair">Salvar e sair</string>
+    <string id="Descartar">Descartar e sair</string>
+    <string id="Som">Som</string>
+    <string id="Vibracao">Vibração</string>
+    <string id="Contagem">Contagem regressiva</string>
+    <string id="Rounds">Rounds</string>
+    <string id="TempoTrabalho">Trabalho</string>
+    <string id="TempoDescanso">Descanso</string>
+    <string id="TempoAquecimento">Aquecimento</string>
+    <string id="TempoDesaquecimento">Desaquecimento</string>
+    <string id="PularUltimo">Pular último descanso</string>
+    <string id="Sim">Sim</string>
+    <string id="Nao">Não</string>
+    <string id="Desligado">Desligado</string>
+    <string id="TituloEditar">Editar treino</string>
+    <string id="DicaEditar">UP/DOWN · START avança</string>
+</strings>

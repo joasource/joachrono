@@ -1,0 +1,2 @@
+FROM ciq-sdkm
+RUN apt-get update && apt-get install -y --no-install-recommends xvfb xauth libgl1-mesa-dri libglu1-mesa && rm -rf /var/lib/apt/lists/*

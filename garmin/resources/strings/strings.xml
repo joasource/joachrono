@@ -1,0 +1,36 @@
+<strings>
+    <string id="AppName">joaChrono</string>
+    <string id="Aquecer">WARM-UP</string>
+    <string id="Trabalho">WORK</string>
+    <string id="Descanso">REST</string>
+    <string id="Desaquecer">COOL-DOWN</string>
+    <string id="Livre">FREE</string>
+    <string id="Pronto">READY</string>
+    <string id="Concluido">DONE</string>
+    <string id="Pausado">PAUSED</string>
+    <string id="Proxima">Next: </string>
+    <string id="Total">Total </string>
+    <string id="IniciarDica">START to begin</string>
+    <string id="NovoTreino">+ New workout</string>
+    <string id="Configuracoes">Settings</string>
+    <string id="Iniciar">Start</string>
+    <string id="Editar">Edit</string>
+    <string id="Excluir">Delete</string>
+    <string id="Continuar">Resume</string>
+    <string id="SalvarSair">Save and exit</string>
+    <string id="Descartar">Discard and exit</string>
+    <string id="Som">Sound</string>
+    <string id="Vibracao">Vibration</string>
+    <string id="Contagem">Countdown</string>
+    <string id="Rounds">Rounds</string>
+    <string id="TempoTrabalho">Work</string>
+    <string id="TempoDescanso">Rest</string>
+    <string id="TempoAquecimento">Warm-up</string>
+    <string id="TempoDesaquecimento">Cool-down</string>
+    <string id="PularUltimo">Skip last rest</string>
+    <string id="Sim">Yes</string>
+    <string id="Nao">No</string>
+    <string id="Desligado">Off</string>
+    <string id="TituloEditar">Edit workout</string>
+    <string id="DicaEditar">UP/DOWN · START next</string>
+</strings>

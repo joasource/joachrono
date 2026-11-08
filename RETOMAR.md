@@ -59,3 +59,7 @@ Tudo abaixo está commitado, enviado e testado no aparelho pelo Joaquim.
 - Node via nvm (`~/.nvm`, sem edição do .bashrc): `export NVM_DIR="$HOME/.nvm"; . "$NVM_DIR/nvm.sh"`.
 - Checagens: `npm test`, `npx tsc --noEmit`, `npx expo lint`, `npx prettier --check .`, `npx expo-doctor`.
 - Commits em PT-BR; só commitar/dar push quando o Joaquim autorizar.
+
+## Atualização (2026-11-08): app Garmin Instinct 2X Solar (`garmin/`)
+
+App Connect IQ em Monkey C, não commitado ainda. Detalhes em `garmin/README.md`. Decisões: nativo (o motor TS não roda no relógio, foi **portado** para `garmin/source/Motor.mc` com testes), só modo simples na v1, treinos editados no relógio, gravação da atividade (permissão `Fit`) incluída. SDK 9.3.0 em `~/.Garmin/ConnectIQ` (instalado via Docker por causa do webkit 4.0), chave em `~/garmin-sdk/keys/` (fora do repo), `.prg` em `~/garmin-sdk/out/`. Compila e 11 testes passam no simulador; o treino rodou no simulador (layout desvia da subtela circular). Falta teste em aparelho real e ver o editor no simulador. Próximos: sincronizar treinos do celular, modo avançado, cronômetro livre.

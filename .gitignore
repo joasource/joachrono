@@ -39,3 +39,10 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Garmin (Connect IQ)
+/garmin/bin/
+*.prg
+*.iq
+*.der
+garmin/**/*.pem
