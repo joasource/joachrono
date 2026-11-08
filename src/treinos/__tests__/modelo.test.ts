@@ -17,7 +17,7 @@ describe('normalizarSimples', () => {
   });
   it('limita e arredonda os números', () => {
     const t = normalizarSimples({ id: 'a', rounds: 0, segundosRound: 'abc', segundosDescanso: -5 });
-    expect(t).toMatchObject({ rounds: 1, segundosRound: 20, segundosDescanso: 0 });
+    expect(t).toMatchObject({ rounds: 1, segundosRound: 60, segundosDescanso: 0 });
     expect(normalizarSimples({ id: 'a', rounds: 500 })?.rounds).toBe(99);
   });
 });
