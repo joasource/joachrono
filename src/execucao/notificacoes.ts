@@ -1,5 +1,5 @@
 import * as Notifications from 'expo-notifications';
-import { AndroidImportance } from 'expo-notifications';
+import { AndroidImportance, AndroidNotificationVisibility } from 'expo-notifications';
 import { useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
 
@@ -9,7 +9,8 @@ import { APARENCIA } from './aparencia';
 // Notificações locais agendadas para cada troca de etapa: com a tela bloqueada ou o app em segundo
 // plano o JS pode ser suspenso, mas o sistema entrega o alerta na hora certa. O iOS guarda no máximo
 // 64 agendadas, então agendamos só as próximas e reagendamos a cada mudança de estado.
-const CANAL = 'etapas';
+// Canais Android são imutáveis depois de criados: ao mudar som/importância, troque o id (v2...).
+const CANAL = 'etapas-v2';
 const MAX_AGENDADAS = 30;
 
 Notifications.setNotificationHandler({
@@ -27,6 +28,9 @@ async function garantirCanal() {
   await Notifications.setNotificationChannelAsync(CANAL, {
     name: 'Trocas de etapa',
     importance: AndroidImportance.HIGH,
+    sound: 'default',
+    enableVibrate: true,
+    lockscreenVisibility: AndroidNotificationVisibility.PUBLIC,
     vibrationPattern: [0, 250, 150, 250],
   });
 }
@@ -36,12 +40,24 @@ export async function pedirPermissaoNotificacoes(): Promise<boolean> {
   try {
     await garantirCanal();
     const atual = await Notifications.getPermissionsAsync();
-    if (atual.granted) return true;
-    if (!atual.canAskAgain) return false;
-    return (await Notifications.requestPermissionsAsync()).granted;
+    const ok = atual.granted
+      ? true
+      : atual.canAskAgain && (await Notifications.requestPermissionsAsync()).granted;
+    if (ok) await pedirAlarmeExato();
+    return ok;
   } catch {
     return false;
   }
+}
+
+/** Android 12+: sem alarme exato o sistema atrasa as notificações (Doze, tela bloqueada). */
+async function pedirAlarmeExato() {
+  if (Platform.OS !== 'android') return;
+  try {
+    const atual = await Notifications.getExactAlarmPermissionsAsync();
+    if (!atual.granted && atual.canAskAgain)
+      await Notifications.requestExactAlarmPermissionsAsync();
+  } catch {}
 }
 
 async function cancelarTodas() {
@@ -64,6 +80,7 @@ async function agendar(estado: Estado) {
           type: Notifications.SchedulableTriggerInputTypes.DATE,
           date: new Date(t.em),
           channelId: CANAL,
+          delivery: 'alarmClock',
         },
       });
     } catch {}
