@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { APARENCIA, COR_CONCLUIDO, COR_PRONTO, formatarTempo } from '../execucao/aparencia';
+import { pedirPermissaoNotificacoes, useNotificacoesDaExecucao } from '../execucao/notificacoes';
 import { useExecucao } from '../execucao/useExecucao';
 import { carregarTreinos } from '../treinos/armazenamento';
 import { paraTreino } from '../treinos/modelo';
@@ -72,6 +73,8 @@ function Execucao({ treino }: { treino: Treino }) {
   const insets = useSafeAreaInsets();
   const passos = useMemo(() => compilar(treino), [treino]);
   const { estado, agora, acoes } = useExecucao(passos);
+  const [notificar, setNotificar] = useState(false);
+  useNotificacoesDaExecucao(estado, notificar);
 
   const passo = passoAtual(estado);
   const aparencia = APARENCIA[passo.categoria];
@@ -128,7 +131,14 @@ function Execucao({ treino }: { treino: Treino }) {
 
       <View style={estilos.botoes}>
         {pronto ? (
-          <Botao rotulo="Iniciar" grande onPress={acoes.iniciar} />
+          <Botao
+            rotulo="Iniciar"
+            grande
+            onPress={() => {
+              acoes.iniciar();
+              void pedirPermissaoNotificacoes().then(setNotificar);
+            }}
+          />
         ) : concluido ? (
           <>
             <Botao rotulo="Refazer" onPress={acoes.reiniciar} />

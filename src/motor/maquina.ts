@@ -163,3 +163,38 @@ export function tick(e: Estado, agora: number): { estado: Estado; eventos: Event
   if (eventos.length === 0) return { estado: e, eventos };
   return { estado: atual, eventos };
 }
+
+export interface Transicao {
+  /** Instante (ms) em que a transição deve ocorrer, se nada mudar antes. */
+  em: number;
+  evento: Evento;
+  /** Passo que começa nessa transição; null no fim do treino. */
+  passo: Passo | null;
+}
+
+/**
+ * Próximas transições por tempo a partir de `agora`, até `max` ou até uma etapa de fim manual
+ * (cuja hora ninguém sabe). Serve para agendar notificações locais com o app em segundo plano.
+ */
+export function proximasTransicoes(e: Estado, agora: number, max: number): Transicao[] {
+  if (e.status !== 'contando') return [];
+  const lista: Transicao[] = [];
+  let momento = agora;
+  let restante = restanteMs(e, agora);
+  for (let i = e.indice; i < e.passos.length && lista.length < max; i++) {
+    if (i > e.indice) {
+      const fim = e.passos[i].fim;
+      if (fim.tipo === 'manual') break;
+      restante = fim.segundos * 1000;
+    }
+    if (restante === null) break;
+    momento += restante;
+    const proximo = e.passos[i + 1] ?? null;
+    lista.push({
+      em: momento,
+      evento: proximo ? { tipo: 'troca', de: i, para: i + 1 } : { tipo: 'fim' },
+      passo: proximo,
+    });
+  }
+  return lista;
+}

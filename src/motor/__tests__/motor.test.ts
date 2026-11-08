@@ -12,6 +12,7 @@ import {
   livreVolta,
   livreDecorridoMs,
   passoAtual,
+  proximasTransicoes,
   pausar,
   restanteMs,
   retomar,
@@ -260,5 +261,36 @@ describe('cronômetro livre', () => {
     e = livreVolta(e, 110 * S);
     expect(e.marcas).toEqual([30 * S, 55 * S]);
     expect(livreDuracoesDasVoltas(e)).toEqual([30 * S, 25 * S]);
+  });
+});
+
+describe('proximasTransicoes', () => {
+  it('lista as trocas por tempo e termina no fim', () => {
+    const e = iniciar(criar(compilar(rounds())), 0);
+    const t = proximasTransicoes(e, 5 * S, 10);
+    expect(t.map((x) => x.em)).toEqual(
+      [20 * S + 5 * S - 5 * S, 30 * S, 50 * S, 60 * S, 80 * S].map((x) => x),
+    );
+    expect(t[t.length - 1].evento.tipo).toBe('fim');
+  });
+
+  it('respeita o máximo e não agenda nada fora de "contando"', () => {
+    const e = criar(compilar(rounds()));
+    expect(proximasTransicoes(e, 0, 5)).toEqual([]);
+    expect(proximasTransicoes(iniciar(e, 0), 0, 2)).toHaveLength(2);
+  });
+
+  it('para numa etapa de fim manual', () => {
+    const treino: Treino = {
+      id: 'm',
+      nome: 'M',
+      itens: [
+        { tipo: 'etapa', id: 'a', categoria: 'trabalho', fim: { tipo: 'tempo', segundos: 10 } },
+        { tipo: 'etapa', id: 'b', categoria: 'livre', fim: { tipo: 'manual' } },
+        { tipo: 'etapa', id: 'c', categoria: 'trabalho', fim: { tipo: 'tempo', segundos: 10 } },
+      ],
+    };
+    const e = iniciar(criar(compilar(treino)), 0);
+    expect(proximasTransicoes(e, 0, 10).map((x) => x.em)).toEqual([10 * S]);
   });
 });
