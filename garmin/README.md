@@ -41,5 +41,5 @@ Conecte o relógio por USB e copie o `joachrono.prg` para `GARMIN/APPS/` (em Lin
 
 ## Pendências
 
-- Não testado em aparelho real (bipe e vibração dependem do firmware) nem a tela do editor no simulador.
+- Instalado e testado no Instinct 2X real (funcionou).
 - Fase 2: sincronizar treinos do celular (Connect IQ Mobile SDK no app Expo, exige novo development build), modo avançado, cronômetro livre.
