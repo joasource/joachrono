@@ -22,8 +22,8 @@ describe('gerarLinhaDoTempoWav', () => {
     expect(v.getUint32(24, true)).toBe(TAXA_HZ);
     expect(v.getUint16(34, true)).toBe(8);
     expect(v.getUint32(40, true)).toBe(r.wav.length - 44);
-    // 10 s + 5 s + 10 s de treino + 1 s de folga
-    expect(r.wav.length - 44).toBe(26 * TAXA_HZ);
+    // 10 s + 5 s + 10 s de treino + 3 s de folga (cauda do gongo final)
+    expect(r.wav.length - 44).toBe(28 * TAXA_HZ);
     expect(r.instantes).toEqual([11000, 16000, 26000]);
   });
 

@@ -2,9 +2,9 @@ import { proximasTransicoes, type Estado } from '../motor';
 
 // Com a tela bloqueada o JS é suspenso, mas o player nativo continua. Então geramos um áudio com o
 // treino inteiro (silêncio + bipes nos instantes certos) e deixamos o player tocá-lo sozinho.
-// WAV mono, 8 bits sem sinal, 4 kHz: ~4 KB/s (1 h ≈ 14 MB). Os bipes ficam abaixo de 2 kHz.
-export const TAXA_HZ = 4000;
-export const LIMITE_MS = 2 * 60 * 60 * 1000;
+// WAV mono, 8 bits sem sinal, 8 kHz: ~8 KB/s (1 h ≈ 29 MB).
+export const TAXA_HZ = 8000;
+export const LIMITE_MS = 60 * 60 * 1000;
 const CONTAGEM_REGRESSIVA_S = 3;
 const SILENCIO = 128;
 
@@ -37,7 +37,37 @@ function bipe(dados: Uint8Array, inicioMs: number, hz: number, duracaoMs: number
   for (let i = 0; i < n && ini + i < dados.length; i++) {
     if (ini + i < 0) continue;
     const env = Math.min(1, i / rampa, (n - i) / rampa);
-    dados[ini + i] = SILENCIO + Math.round(120 * env * Math.sin((2 * Math.PI * hz * i) / TAXA_HZ));
+    somar(dados, ini + i, 120 * env * Math.sin((2 * Math.PI * hz * i) / TAXA_HZ));
+  }
+}
+
+/** Soma ao que já está no arquivo (sinais próximos se misturam em vez de se cortarem). */
+function somar(dados: Uint8Array, pos: number, delta: number) {
+  dados[pos] = Math.max(0, Math.min(255, dados[pos] + Math.round(delta)));
+}
+
+// Gongo agudo: parciais inarmônicos com decaimentos diferentes (os mais agudos somem primeiro) e um
+// parcial levemente desafinado que dá o "tremido" característico.
+const GONGO = [
+  { hz: 520, amp: 1, tau: 1.0 },
+  { hz: 524, amp: 0.5, tau: 0.9 },
+  { hz: 830, amp: 0.7, tau: 0.8 },
+  { hz: 1430, amp: 0.5, tau: 0.55 },
+  { hz: 2150, amp: 0.3, tau: 0.35 },
+];
+const GONGO_MS = 2200;
+
+function gongo(dados: Uint8Array, inicioMs: number) {
+  const ini = Math.round((inicioMs * TAXA_HZ) / 1000);
+  const n = Math.round((GONGO_MS * TAXA_HZ) / 1000);
+  const ataque = Math.round(0.003 * TAXA_HZ);
+  const soma = GONGO.reduce((t, p) => t + p.amp, 0);
+  for (let i = 0; i < n && ini + i < dados.length; i++) {
+    if (ini + i < 0) continue;
+    const t = i / TAXA_HZ;
+    let v = 0;
+    for (const p of GONGO) v += p.amp * Math.exp(-t / p.tau) * Math.sin(2 * Math.PI * p.hz * t);
+    somar(dados, ini + i, (125 * v * Math.min(1, i / ataque)) / soma);
   }
 }
 
@@ -55,7 +85,7 @@ export function gerarLinhaDoTempoWav(
   );
   if (transicoes.length === 0) return null;
 
-  const fimMs = transicoes[transicoes.length - 1].em - agora + 1000;
+  const fimMs = transicoes[transicoes.length - 1].em - agora + 3000;
   const amostras = Math.ceil((fimMs * TAXA_HZ) / 1000);
   const arquivo = new Uint8Array(44 + amostras);
   arquivo.set(cabecalho(amostras), 0);
@@ -70,11 +100,9 @@ export function gerarLinhaDoTempoWav(
       // Não encosta no sinal da troca anterior nem começa antes de agora.
       if (inicio >= 0 && inicio >= anteriorMs + 500) bipe(dados, inicio, 880, 120);
     }
-    if (t.evento.tipo === 'fim') {
-      for (let i = 0; i < 3; i++) bipe(dados, alvo + i * 300, 1500, 180);
-    } else {
-      bipe(dados, alvo, 1200, 450);
-    }
+    // Troca: uma batida; fim do treino: duas.
+    gongo(dados, alvo);
+    if (t.evento.tipo === 'fim') gongo(dados, alvo + 900);
     anteriorMs = alvo;
   }
   return { wav: arquivo, instantes: transicoes.map((t) => t.em) };
