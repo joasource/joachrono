@@ -123,7 +123,10 @@ export const en: Traducoes = {
     vibracao: 'Vibration',
     telaBloqueada: 'Locked screen and alerts',
     sinaisBloqueado: 'Signals with the screen locked',
-    sinaisBloqueadoDica: 'Pauses music from other apps while the screen is locked.',
+    sinaisBloqueadoDica: 'Plays the signals even with the app in the background.',
+    misturarComMusica: 'Mix with music',
+    misturarComMusicaDica:
+      'On: signals play over music from other apps. Off: music is paused while the screen is locked.',
     notificacoes: 'Notifications',
     notificacoesDica: 'Alerts each step change while the app is in the background.',
     ajustesDoSistema: 'Open system settings',

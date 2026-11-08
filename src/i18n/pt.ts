@@ -121,7 +121,10 @@ export const pt = {
     vibracao: 'Vibração',
     telaBloqueada: 'Tela bloqueada e avisos',
     sinaisBloqueado: 'Sinais com a tela bloqueada',
-    sinaisBloqueadoDica: 'Pausa a música de outros apps enquanto a tela estiver bloqueada.',
+    sinaisBloqueadoDica: 'Toca os sinais mesmo com o app em segundo plano.',
+    misturarComMusica: 'Misturar com a música',
+    misturarComMusicaDica:
+      'Ligado: os sinais tocam por cima da música de outros apps. Desligado: a música é pausada enquanto a tela estiver bloqueada.',
     notificacoes: 'Notificações',
     notificacoesDica: 'Avisa cada troca de etapa com o app em segundo plano.',
     ajustesDoSistema: 'Abrir ajustes do sistema',

@@ -67,11 +67,13 @@ export interface Configuracoes {
   contagemSegundos: ContagemSegundos;
   /** Avisos do sistema nas trocas de etapa (úteis com o app em segundo plano). */
   notificacoes: boolean;
-  /**
-   * Toca os sinais com a tela bloqueada. No Android isso exige áudio exclusivo, então pausa a
-   * música de outros apps enquanto a tela está bloqueada.
-   */
+  /** Toca os sinais com a tela bloqueada, por um áudio nativo (a tela de bloqueio mostra o controle de mídia). */
   sinaisBloqueado: boolean;
+  /**
+   * Com a tela bloqueada, os sinais tocam por cima da música de outros apps (ligado) ou pausam a
+   * música (desligado, áudio exclusivo `doNotMix`).
+   */
+  misturarComMusica: boolean;
 }
 
 export const PADRAO: Configuracoes = {
@@ -83,6 +85,7 @@ export const PADRAO: Configuracoes = {
   contagemSegundos: 3,
   notificacoes: true,
   sinaisBloqueado: true,
+  misturarComMusica: true,
 };
 
 /** Aceita qualquer coisa vinda do disco e devolve configurações válidas (campos ruins viram o padrão). */
@@ -104,5 +107,6 @@ export function normalizarConfiguracoes(bruto: unknown): Configuracoes {
       : PADRAO.contagemSegundos,
     notificacoes: booleano(b.notificacoes, PADRAO.notificacoes),
     sinaisBloqueado: booleano(b.sinaisBloqueado, PADRAO.sinaisBloqueado),
+    misturarComMusica: booleano(b.misturarComMusica, PADRAO.misturarComMusica),
   };
 }

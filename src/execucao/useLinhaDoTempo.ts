@@ -11,14 +11,16 @@ import { gerarLinhaDoTempoWav } from './linhaDoTempo';
 import { somNativo } from './somNativo';
 
 /**
- * Em primeiro plano o áudio mistura com a música de outros apps; só ao ir para segundo plano (tela
- * bloqueada) vira mídia exclusiva (`doNotMix`), requisito do controle na tela de bloqueio.
+ * Em primeiro plano o áudio mistura com a música de outros apps. Em segundo plano (tela bloqueada)
+ * também mistura (padrão, testado no Android/Xiaomi com o controle de mídia ativo); com
+ * `misturarComMusica` desligado vira mídia exclusiva (`doNotMix`) e pausa a música.
  */
 async function aplicarModo(p: AudioPlayer, segundoPlano: boolean) {
   await setAudioModeAsync({
     playsInSilentMode: true,
     shouldPlayInBackground: true,
-    interruptionMode: segundoPlano ? 'doNotMix' : 'mixWithOthers',
+    interruptionMode:
+      segundoPlano && !obterConfiguracoes().misturarComMusica ? 'doNotMix' : 'mixWithOthers',
   });
   if (segundoPlano) {
     p.setActiveForLockScreen(true, { title: 'joaChrono', artist: t('aviso.emAndamento') });

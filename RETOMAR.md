@@ -47,7 +47,8 @@ Tudo abaixo está commitado, enviado e testado no aparelho pelo Joaquim.
 
 ## Pendências
 
-- Ideias: experimento `mixWithOthers` no áudio com tela bloqueada (hoje `doNotMix` pausa a música de outros apps), duplicar treino, backup/importação em JSON, screenshots no README.
+- Feito (2026-11-08): `mixWithOthers` com a tela bloqueada funciona no Redmi (música continua, bipes por cima). Virou a opção "Misturar com a música" (`misturarComMusica`, padrão ligado); desligada usa `doNotMix` e pausa a música. Só testado no Xiaomi/Android, não no iOS nem por mais de poucos minutos.
+- Ideias: duplicar treino, backup/importação em JSON, screenshots no README.
 - Decidido (2026-11-08): bundle id/package `app.joachrono` e titular Joaquim Ferreira (pessoa física, licença proprietária) ficam como estão. Por ora só se gera APK Android, sem publicação.
 - Contas: Apple Developer (US$ 99/ano), Google Play (US$ 25).
 

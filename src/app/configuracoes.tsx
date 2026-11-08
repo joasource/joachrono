@@ -83,6 +83,12 @@ export default function Configuracoes() {
         onChange={(sinaisBloqueado) => salvarConfiguracoes({ sinaisBloqueado })}
       />
       <OpcaoSwitch
+        rotulo={t('config.misturarComMusica')}
+        dica={t('config.misturarComMusicaDica')}
+        valor={c.misturarComMusica}
+        onChange={(misturarComMusica) => salvarConfiguracoes({ misturarComMusica })}
+      />
+      <OpcaoSwitch
         rotulo={t('config.notificacoes')}
         dica={t('config.notificacoesDica')}
         valor={c.notificacoes}

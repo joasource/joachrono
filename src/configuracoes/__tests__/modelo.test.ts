@@ -48,4 +48,10 @@ describe('tipo de sinal e intensidade da vibração', () => {
     expect(total(VIBRACAO_NOTIFICACAO.suave)).toBeLessThan(total(VIBRACAO_NOTIFICACAO.media));
     expect(total(VIBRACAO_NOTIFICACAO.media)).toBeLessThan(total(VIBRACAO_NOTIFICACAO.forte));
   });
+
+  it('misturarComMusica: padrão ligado e aceita desligar', () => {
+    expect(PADRAO.misturarComMusica).toBe(true);
+    expect(normalizarConfiguracoes({ misturarComMusica: false }).misturarComMusica).toBe(false);
+    expect(normalizarConfiguracoes({ misturarComMusica: 'x' }).misturarComMusica).toBe(true);
+  });
 });
