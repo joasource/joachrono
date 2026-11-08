@@ -36,8 +36,7 @@ Configurações v1 (não commitada, sem teste em aparelho): `src/configuracoes/`
 
 ## Pendências
 
-- Confirmar `app.joachrono` (bundleIdentifier/package) — não muda depois de publicado.
-- Confirmar titular (pessoa ou empresa/CNPJ).
+- Decidido (2026-11-08): bundle id/package `app.joachrono` e titular Joaquim Ferreira (pessoa física, licença proprietária) ficam como estão. Por ora só se gera APK Android, sem publicação.
 - Contas: Apple Developer (US$ 99/ano), Google Play (US$ 25).
 
 ## Ambiente
