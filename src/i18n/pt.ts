@@ -57,6 +57,54 @@ export const pt = {
     excluirVarios: { one: 'Excluir %{count} registro?', other: 'Excluir %{count} registros?' },
     excluirMsg: 'Os treinos salvos não são afetados.',
   },
+  sobre: {
+    abrir: 'Sobre',
+    titulo: 'Sobre',
+    versao: 'Versão %{versao}',
+    autor: 'Desenvolvido por',
+    contato: 'Contato',
+    enviarEmail: 'Enviar e-mail para %{email}',
+    licenca: 'Licença',
+    direitos: 'Copyright © 2026 Joaquim Ferreira. Todos os direitos reservados.',
+    licencaTexto:
+      'Este software e todo o seu código-fonte, arte, textos, marcas e demais materiais ("Software") são propriedade exclusiva de Joaquim Ferreira ("Titular"). Nenhum direito é concedido, expressa ou implicitamente, exceto os que o Titular conceder por escrito.\n\nSem autorização prévia e por escrito do Titular, é proibido: (a) copiar, modificar, traduzir ou criar obras derivadas; (b) distribuir, publicar, sublicenciar, vender, alugar ou emprestar o Software ou qualquer parte dele, em qualquer plataforma ou loja de aplicativos; (c) fazer engenharia reversa, descompilar ou tentar extrair o código-fonte, salvo na medida em que a lei aplicável proíba esta restrição; (d) remover avisos de direitos autorais ou de propriedade.\n\nO Titular pode distribuir e comercializar o Software, em todas as plataformas e por qualquer modelo (venda, assinatura, compras no aplicativo, anúncios), e licenciá-lo aos usuários finais por meio dos termos de cada loja de aplicativos ou de um contrato de licença de usuário final próprio.\n\nComponentes de terceiros (bibliotecas de código aberto, como React, React Native e Expo) permanecem sob as respectivas licenças, listadas em seus pacotes; esta licença não as altera.\n\nO SOFTWARE É FORNECIDO "NO ESTADO EM QUE SE ENCONTRA", SEM GARANTIA DE QUALQUER TIPO. O TITULAR NÃO RESPONDE POR DANOS DECORRENTES DO USO, NA MEDIDA MÁXIMA PERMITIDA PELA LEI.',
+  },
+  ajuda: {
+    abrir: 'Ajuda',
+    titulo: 'Ajuda',
+    itens: [
+      {
+        titulo: 'Treino simples',
+        texto:
+          'Defina aquecimento, rounds, tempo de trabalho, descanso e desaquecimento. Por padrão o último descanso é pulado.',
+      },
+      {
+        titulo: 'Treino avançado',
+        texto:
+          'Monte uma lista de etapas e blocos “Repetir N×”. Uma etapa manual dura até você tocar em “Próxima”. Converta um treino simples em “Converter para avançado…” (não tem volta).',
+      },
+      {
+        titulo: 'Durante o treino',
+        texto:
+          'Pausar e retomar no botão central; ◀◀ e ▶▶ voltam ou avançam uma etapa. A tela fica acesa enquanto o treino roda.',
+      },
+      {
+        titulo: 'Tela bloqueada',
+        texto:
+          'Os sinais tocam e o aparelho vibra mesmo com a tela bloqueada. Se não funcionar, permita notificações e desative a economia de bateria para o app nos ajustes do sistema (em alguns aparelhos, como Xiaomi, também “Mostrar na tela de bloqueio”).',
+      },
+      {
+        titulo: 'Selecionar e excluir',
+        texto:
+          'Na lista de treinos e no histórico, mantenha o dedo sobre um item para selecionar; depois toque nos outros e use a lixeira.',
+      },
+      {
+        titulo: 'Histórico',
+        texto:
+          'Cada treino concluído é registrado. Se você sair antes do fim, o registro só é guardado a partir de 10 segundos.',
+      },
+    ],
+  },
   config: {
     titulo: 'Configurações',
     sinais: 'Sinais',
@@ -78,6 +126,7 @@ export const pt = {
     notificacoesDica: 'Avisa cada troca de etapa com o app em segundo plano.',
     ajustesDoSistema: 'Abrir ajustes do sistema',
     abrir: 'Configurações',
+    informacoes: 'Informações',
   },
   editar: {
     excluirTitulo: 'Excluir treino?',

@@ -59,6 +59,54 @@ export const en: Traducoes = {
     excluirVarios: { one: 'Delete %{count} entry?', other: 'Delete %{count} entries?' },
     excluirMsg: 'Your saved workouts are not affected.',
   },
+  sobre: {
+    abrir: 'About',
+    titulo: 'About',
+    versao: 'Version %{versao}',
+    autor: 'Developed by',
+    contato: 'Contact',
+    enviarEmail: 'Send an email to %{email}',
+    licenca: 'License',
+    direitos: 'Copyright © 2026 Joaquim Ferreira. All rights reserved.',
+    licencaTexto:
+      'This software and all of its source code, artwork, text, trademarks and other materials (the "Software") are the exclusive property of Joaquim Ferreira (the "Owner"). No rights are granted, express or implied, except those the Owner grants in writing.\n\nWithout the Owner\'s prior written permission, you may not: (a) copy, modify, translate or create derivative works; (b) distribute, publish, sublicense, sell, rent or lend the Software or any part of it, on any platform or app store; (c) reverse engineer, decompile or attempt to extract the source code, except to the extent applicable law prohibits this restriction; (d) remove copyright or proprietary notices.\n\nThe Owner may distribute and monetize the Software on all platforms under any model (sale, subscription, in-app purchases, advertising), and license it to end users through each app store\'s terms or a separate end-user license agreement.\n\nThird-party components (open-source libraries such as React, React Native and Expo) remain under their own licenses, listed in their packages; this license does not change them.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. THE OWNER SHALL NOT BE LIABLE FOR ANY DAMAGES ARISING FROM ITS USE, TO THE MAXIMUM EXTENT PERMITTED BY LAW.',
+  },
+  ajuda: {
+    abrir: 'Help',
+    titulo: 'Help',
+    itens: [
+      {
+        titulo: 'Simple workout',
+        texto:
+          'Set warm up, rounds, work time, rest and cool down. By default the last rest is skipped.',
+      },
+      {
+        titulo: 'Advanced workout',
+        texto:
+          'Build a list of steps and “Repeat N×” blocks. A manual step lasts until you tap “Next”. Convert a simple workout with “Convert to advanced…” (it can’t be undone).',
+      },
+      {
+        titulo: 'During a workout',
+        texto:
+          'Pause and resume with the center button; ◀◀ and ▶▶ go back or forward one step. The screen stays on while the workout runs.',
+      },
+      {
+        titulo: 'Locked screen',
+        texto:
+          'Sounds play and the device vibrates even with the screen locked. If it doesn’t work, allow notifications and turn off battery optimization for the app in system settings (on some devices, like Xiaomi, also “Show on lock screen”).',
+      },
+      {
+        titulo: 'Select and delete',
+        texto:
+          'In the workout list and in the history, press and hold an item to select it; then tap others and use the trash can.',
+      },
+      {
+        titulo: 'History',
+        texto:
+          'Every completed workout is logged. If you leave before the end, it is only saved after 10 seconds.',
+      },
+    ],
+  },
   config: {
     titulo: 'Settings',
     sinais: 'Signals',
@@ -80,6 +128,7 @@ export const en: Traducoes = {
     notificacoesDica: 'Alerts each step change while the app is in the background.',
     ajustesDoSistema: 'Open system settings',
     abrir: 'Settings',
+    informacoes: 'Information',
   },
   editar: {
     excluirTitulo: 'Delete workout?',

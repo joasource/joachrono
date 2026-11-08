@@ -96,6 +96,22 @@ export default function Configuracoes() {
         <Text style={estilos.secundarioTexto}>{t('config.ajustesDoSistema')}</Text>
       </Pressable>
 
+      <Text style={estilos.secao}>{t('config.informacoes')}</Text>
+      <Pressable
+        accessibilityRole="button"
+        style={estilos.secundario}
+        onPress={() => router.push('/ajuda')}
+      >
+        <Text style={estilos.secundarioTexto}>{t('ajuda.abrir')}</Text>
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        style={estilos.secundario}
+        onPress={() => router.push('/sobre')}
+      >
+        <Text style={estilos.secundarioTexto}>{t('sobre.abrir')}</Text>
+      </Pressable>
+
       <Pressable accessibilityRole="button" style={estilos.voltar} onPress={() => router.back()}>
         <Text style={estilos.voltarTexto}>{t('geral.voltar')}</Text>
       </Pressable>
