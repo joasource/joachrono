@@ -3,8 +3,16 @@ import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { formatarTempo } from '../execucao/aparencia';
-import { duracaoTotalSegundos } from '../treinos/modelo';
+import { medidas, type TreinoSalvo } from '../treinos/modelo';
 import { useTreinos } from '../treinos/useTreinos';
+
+function detalhe(t: TreinoSalvo): string {
+  const m = medidas(t);
+  const tempo = m ? `${m.temManual ? '≥ ' : ''}${formatarTempo(m.segundos * 1000)}` : '—';
+  return t.modo === 'avancado'
+    ? `Avançado · ${m?.passos ?? '?'} etapas · ${tempo}`
+    : `${t.rounds} × ${t.segundosRound}s / ${t.segundosDescanso}s · ${tempo}`;
+}
 
 export default function Inicio() {
   const insets = useSafeAreaInsets();
@@ -33,10 +41,7 @@ export default function Inicio() {
               onPress={() => router.push({ pathname: '/executar', params: { id: item.id } })}
             >
               <Text style={estilos.nome}>{item.nome || 'Treino sem nome'}</Text>
-              <Text style={estilos.detalhe}>
-                {item.rounds} × {item.segundosRound}s / {item.segundosDescanso}s ·{' '}
-                {formatarTempo(duracaoTotalSegundos(item) * 1000)}
-              </Text>
+              <Text style={estilos.detalhe}>{detalhe(item)}</Text>
             </Pressable>
             <Pressable
               accessibilityRole="button"
