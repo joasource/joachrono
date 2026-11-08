@@ -1,12 +1,38 @@
+import { t } from '../i18n/t';
 import type { CategoriaEtapa } from '../motor';
 
 /** Cor de fundo e rótulo de cada categoria de etapa (a tela inteira muda de cor a cada troca). */
 export const APARENCIA: Record<CategoriaEtapa, { fundo: string; rotulo: string }> = {
-  aquecer: { fundo: '#b45309', rotulo: 'Aquecer' },
-  trabalho: { fundo: '#15803d', rotulo: 'Trabalho' },
-  descanso: { fundo: '#1d4ed8', rotulo: 'Descanso' },
-  desaquecer: { fundo: '#7e22ce', rotulo: 'Desaquecer' },
-  livre: { fundo: '#374151', rotulo: 'Livre' },
+  aquecer: {
+    fundo: '#b45309',
+    get rotulo() {
+      return t('etapa.aquecer');
+    },
+  },
+  trabalho: {
+    fundo: '#15803d',
+    get rotulo() {
+      return t('etapa.trabalho');
+    },
+  },
+  descanso: {
+    fundo: '#1d4ed8',
+    get rotulo() {
+      return t('etapa.descanso');
+    },
+  },
+  desaquecer: {
+    fundo: '#7e22ce',
+    get rotulo() {
+      return t('etapa.desaquecer');
+    },
+  },
+  livre: {
+    fundo: '#374151',
+    get rotulo() {
+      return t('etapa.livre');
+    },
+  },
 };
 
 export const COR_PRONTO = '#0b0b0f';

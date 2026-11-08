@@ -1,4 +1,5 @@
 // Treino do "modo avançado": lista de etapas e blocos "Repetir N×" (um nível, como no Garmin Connect).
+import { t } from '../i18n/t';
 import {
   compilar,
   duracaoTotal,
@@ -169,17 +170,17 @@ export interface Problemas {
 
 export function problemas(itens: Item[]): Problemas {
   const r: Problemas = { geral: [], porId: {} };
-  if (itens.length === 0) r.geral.push('Adicione ao menos uma etapa.');
+  if (itens.length === 0) r.geral.push(t('avancado.semEtapas'));
   const percorrer = (lista: Item[]): void => {
     for (const i of lista) {
       if (i.tipo !== 'repeticao') continue;
-      if (i.itens.length === 0) r.porId[i.id] = 'Repetição vazia: adicione uma etapa ou remova.';
+      if (i.itens.length === 0) r.porId[i.id] = t('avancado.repeticaoVazia');
       percorrer(i.itens);
     }
   };
   percorrer(itens);
   if (contarPassos(itens) > LIMITES_AVANCADO.passos) {
-    r.geral.push(`Treino grande demais (máximo de ${LIMITES_AVANCADO.passos} etapas no total).`);
+    r.geral.push(t('avancado.grandeDemais', { max: LIMITES_AVANCADO.passos }));
   }
   return r;
 }

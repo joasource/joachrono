@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { t } from '../i18n/t';
 import { formatarTempo } from '../execucao/aparencia';
 import { LIMITES, medidas, normalizarSimples, type TreinoSimples } from '../treinos/modelo';
 import { CampoNumero } from './CampoNumero';
@@ -18,12 +19,22 @@ import { estilosEditor as e } from './estilos';
 
 type Campo = Exclude<keyof TreinoSimples, 'modo' | 'id' | 'nome'>;
 
-const CAMPOS: { campo: Campo; rotulo: string; min: number; max: number }[] = [
-  { campo: 'rounds', rotulo: 'Rounds', min: 1, max: LIMITES.rounds },
-  { campo: 'segundosRound', rotulo: 'Trabalho (s)', min: 1, max: LIMITES.segundos },
-  { campo: 'segundosDescanso', rotulo: 'Descanso (s)', min: 0, max: LIMITES.segundos },
-  { campo: 'segundosAquecimento', rotulo: 'Aquecimento (s)', min: 0, max: LIMITES.segundos },
-  { campo: 'segundosDesaquecimento', rotulo: 'Desaquecimento (s)', min: 0, max: LIMITES.segundos },
+const CAMPOS: { campo: Campo; chave: string; min: number; max: number }[] = [
+  { campo: 'rounds', chave: 'form.rounds', min: 1, max: LIMITES.rounds },
+  { campo: 'segundosRound', chave: 'form.trabalho', min: 1, max: LIMITES.segundos },
+  { campo: 'segundosDescanso', chave: 'form.descanso', min: 0, max: LIMITES.segundos },
+  {
+    campo: 'segundosAquecimento',
+    chave: 'form.aquecimento',
+    min: 0,
+    max: LIMITES.segundos,
+  },
+  {
+    campo: 'segundosDesaquecimento',
+    chave: 'form.desaquecimento',
+    min: 0,
+    max: LIMITES.segundos,
+  },
 ];
 
 export function FormSimples(props: {
@@ -38,14 +49,10 @@ export function FormSimples(props: {
   const total = medidas(treino);
 
   function converter() {
-    Alert.alert(
-      'Converter para avançado?',
-      'Você poderá editar etapas e blocos de repetição livremente, mas não dá para voltar ao modo simples.',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { text: 'Converter', onPress: () => props.onConverter(treino) },
-      ],
-    );
+    Alert.alert(t('form.converterTitulo'), t('form.converterMsg'), [
+      { text: t('geral.cancelar'), style: 'cancel' },
+      { text: t('form.converterAcao'), onPress: () => props.onConverter(treino) },
+    ]);
   }
 
   return (
@@ -58,35 +65,38 @@ export function FormSimples(props: {
         keyboardShouldPersistTaps="handled"
       >
         <Text style={e.titulo} accessibilityRole="header">
-          {props.novo ? 'Novo treino' : 'Editar treino'}
+          {props.novo ? t('form.novo') : t('form.editar')}
         </Text>
 
-        <Text style={e.rotulo}>Nome</Text>
+        <Text style={e.rotulo}>{t('form.nome')}</Text>
         <TextInput
           style={e.entrada}
           value={treino.nome}
           onChangeText={(nome) => setTreino({ ...treino, nome })}
-          placeholder="Ex.: Tabata"
+          placeholder={t('form.exemploNome')}
           placeholderTextColor="#6b7280"
           maxLength={60}
         />
 
-        {CAMPOS.map(({ campo, rotulo, min, max }) => (
-          <View key={campo}>
-            <Text style={e.rotulo}>{rotulo}</Text>
-            <CampoNumero
-              estilo={e.entrada}
-              rotulo={rotulo}
-              valor={treino[campo]}
-              min={min}
-              max={max}
-              onChange={(v) => setTreino((t) => ({ ...t, [campo]: v }))}
-            />
-          </View>
-        ))}
+        {CAMPOS.map(({ campo, chave, min, max }) => {
+          const rotulo = t(chave);
+          return (
+            <View key={campo}>
+              <Text style={e.rotulo}>{rotulo}</Text>
+              <CampoNumero
+                estilo={e.entrada}
+                rotulo={rotulo}
+                valor={treino[campo]}
+                min={min}
+                max={max}
+                onChange={(v) => setTreino((t) => ({ ...t, [campo]: v }))}
+              />
+            </View>
+          );
+        })}
 
         <Text style={e.duracao}>
-          Duração total: {total ? formatarTempo(total.segundos * 1000) : '—'}
+          {t('form.duracao', { tempo: total ? formatarTempo(total.segundos * 1000) : '—' })}
         </Text>
 
         <Pressable
@@ -94,14 +104,14 @@ export function FormSimples(props: {
           style={e.salvar}
           onPress={() => props.onSalvar(normalizarSimples(treino)!)}
         >
-          <Text style={e.salvarTexto}>Salvar</Text>
+          <Text style={e.salvarTexto}>{t('geral.salvar')}</Text>
         </Pressable>
         <Pressable accessibilityRole="button" style={e.secundario} onPress={converter}>
-          <Text style={e.secundarioTexto}>Converter para avançado…</Text>
+          <Text style={e.secundarioTexto}>{t('form.converterBotao')}</Text>
         </Pressable>
         {props.novo ? null : (
           <Pressable accessibilityRole="button" style={e.secundario} onPress={props.onExcluir}>
-            <Text style={e.excluirTexto}>Excluir</Text>
+            <Text style={e.excluirTexto}>{t('geral.excluir')}</Text>
           </Pressable>
         )}
       </ScrollView>

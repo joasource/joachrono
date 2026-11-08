@@ -3,6 +3,7 @@ import { File, Paths } from 'expo-file-system';
 import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
 
+import { t } from '../i18n/t';
 import type { Estado } from '../motor';
 import { gerarLinhaDoTempoWav } from './linhaDoTempo';
 import { somNativo } from './somNativo';
@@ -18,7 +19,7 @@ async function aplicarModo(p: AudioPlayer, segundoPlano: boolean) {
     interruptionMode: segundoPlano ? 'doNotMix' : 'mixWithOthers',
   });
   if (segundoPlano) {
-    p.setActiveForLockScreen(true, { title: 'Joachrono', artist: 'Treino em andamento' });
+    p.setActiveForLockScreen(true, { title: 'Joachrono', artist: t('aviso.emAndamento') });
   } else {
     p.setActiveForLockScreen(false);
   }

@@ -2,6 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
 
+import { t } from '../i18n/t';
 import { EditorAvancado } from '../editor/EditorAvancado';
 import { FormSimples } from '../editor/FormSimples';
 import {
@@ -32,10 +33,10 @@ export default function Editar() {
   }
 
   function excluir() {
-    Alert.alert('Excluir treino?', treino?.nome || 'Treino sem nome', [
-      { text: 'Cancelar', style: 'cancel' },
+    Alert.alert(t('editar.excluirTitulo'), treino?.nome || t('geral.semNome'), [
+      { text: t('geral.cancelar'), style: 'cancel' },
       {
-        text: 'Excluir',
+        text: t('geral.excluir'),
         style: 'destructive',
         onPress: async () => {
           await salvarTreinos(semTreino(await carregarTreinos(), treino!.id));

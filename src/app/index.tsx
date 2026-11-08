@@ -2,16 +2,17 @@ import { router } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { t } from '../i18n/t';
 import { formatarTempo } from '../execucao/aparencia';
 import { medidas, type TreinoSalvo } from '../treinos/modelo';
 import { useTreinos } from '../treinos/useTreinos';
 
-function detalhe(t: TreinoSalvo): string {
-  const m = medidas(t);
+function detalhe(treino: TreinoSalvo): string {
+  const m = medidas(treino);
   const tempo = m ? `${m.temManual ? '≥ ' : ''}${formatarTempo(m.segundos * 1000)}` : '—';
-  return t.modo === 'avancado'
-    ? `Avançado · ${m?.passos ?? '?'} etapas · ${tempo}`
-    : `${t.rounds} × ${t.segundosRound}s / ${t.segundosDescanso}s · ${tempo}`;
+  return treino.modo === 'avancado'
+    ? t('inicio.avancado', { passos: m?.passos ?? '?', tempo })
+    : `${treino.rounds} × ${treino.segundosRound}s / ${treino.segundosDescanso}s · ${tempo}`;
 }
 
 export default function Inicio() {
@@ -25,31 +26,29 @@ export default function Inicio() {
       </Text>
       <FlatList
         data={treinos ?? []}
-        keyExtractor={(t) => t.id}
+        keyExtractor={(treino) => treino.id}
         contentContainerStyle={estilos.lista}
         ListEmptyComponent={
-          treinos ? (
-            <Text style={estilos.vazio}>Nenhum treino ainda. Crie o primeiro.</Text>
-          ) : undefined
+          treinos ? <Text style={estilos.vazio}>{t('inicio.vazio')}</Text> : undefined
         }
         renderItem={({ item }) => (
           <View style={estilos.cartao}>
             <Pressable
               style={estilos.cartaoCorpo}
               accessibilityRole="button"
-              accessibilityLabel={`Iniciar ${item.nome || 'Treino'}`}
+              accessibilityLabel={t('inicio.iniciarA11y', { nome: item.nome || t('geral.treino') })}
               onPress={() => router.push({ pathname: '/executar', params: { id: item.id } })}
             >
-              <Text style={estilos.nome}>{item.nome || 'Treino sem nome'}</Text>
+              <Text style={estilos.nome}>{item.nome || t('geral.semNome')}</Text>
               <Text style={estilos.detalhe}>{detalhe(item)}</Text>
             </Pressable>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel={`Editar ${item.nome || 'Treino'}`}
+              accessibilityLabel={t('inicio.editarA11y', { nome: item.nome || t('geral.treino') })}
               onPress={() => router.push({ pathname: '/editar', params: { id: item.id } })}
               style={estilos.editar}
             >
-              <Text style={estilos.editarTexto}>Editar</Text>
+              <Text style={estilos.editarTexto}>{t('inicio.editar')}</Text>
             </Pressable>
           </View>
         )}
@@ -59,7 +58,7 @@ export default function Inicio() {
         style={estilos.novo}
         onPress={() => router.push('/editar')}
       >
-        <Text style={estilos.novoTexto}>+ Novo treino</Text>
+        <Text style={estilos.novoTexto}>{t('inicio.novo')}</Text>
       </Pressable>
     </View>
   );

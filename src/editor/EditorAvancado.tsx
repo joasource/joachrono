@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { t } from '../i18n/t';
 import { APARENCIA, formatarTempo } from '../execucao/aparencia';
 import type { Etapa, Item, Repeticao } from '../motor';
 import {
@@ -70,20 +71,20 @@ export function EditorAvancado(props: {
         keyboardShouldPersistTaps="handled"
       >
         <Text style={e.titulo} accessibilityRole="header">
-          {props.novo ? 'Novo treino' : 'Editar treino'} · avançado
+          {props.novo ? t('form.novo') : t('form.editar')} · {t('avancado.sufixo')}
         </Text>
 
-        <Text style={e.rotulo}>Nome</Text>
+        <Text style={e.rotulo}>{t('form.nome')}</Text>
         <TextInput
           style={e.entrada}
           value={treino.nome}
           onChangeText={(nome) => setTreino((t) => ({ ...t, nome }))}
-          placeholder="Ex.: Intervalado 3 blocos"
+          placeholder={t('avancado.exemploNome')}
           placeholderTextColor="#6b7280"
           maxLength={60}
         />
 
-        <Text style={e.rotulo}>Etapas</Text>
+        <Text style={e.rotulo}>{t('avancado.etapas')}</Text>
         <ListaItens itens={treino.itens} paiId={null} nivel={0} ops={ops} />
 
         {geral.map((m) => (
@@ -93,12 +94,13 @@ export function EditorAvancado(props: {
         ))}
 
         <Text style={e.duracao}>
-          Duração total:{' '}
-          {total ? `${total.temManual ? '≥ ' : ''}${formatarTempo(total.segundos * 1000)}` : '—'}
+          {t('form.duracao', {
+            tempo: total
+              ? `${total.temManual ? '≥ ' : ''}${formatarTempo(total.segundos * 1000)}`
+              : '—',
+          })}
         </Text>
-        {total?.temManual ? (
-          <Text style={estilos.nota}>Etapas manuais duram até você tocar em “Próxima”.</Text>
-        ) : null}
+        {total?.temManual ? <Text style={estilos.nota}>{t('avancado.notaManual')}</Text> : null}
 
         <Pressable
           accessibilityRole="button"
@@ -107,11 +109,11 @@ export function EditorAvancado(props: {
           style={[e.salvar, !valido && e.desativado]}
           onPress={() => props.onSalvar({ ...treino, nome: treino.nome.trim() })}
         >
-          <Text style={e.salvarTexto}>Salvar</Text>
+          <Text style={e.salvarTexto}>{t('geral.salvar')}</Text>
         </Pressable>
         {props.novo ? null : (
           <Pressable accessibilityRole="button" style={e.secundario} onPress={props.onExcluir}>
-            <Text style={e.excluirTexto}>Excluir</Text>
+            <Text style={e.excluirTexto}>{t('geral.excluir')}</Text>
           </Pressable>
         )}
       </ScrollView>
@@ -134,9 +136,12 @@ function ListaItens(props: { itens: Item[]; paiId: string | null; nivel: number;
         );
       })}
       <View style={estilos.linha}>
-        <Chip rotulo="+ Etapa" onPress={() => ops.adicionar(paiId, novaEtapa())} />
+        <Chip rotulo={t('avancado.addEtapa')} onPress={() => ops.adicionar(paiId, novaEtapa())} />
         {podeRepetir ? (
-          <Chip rotulo="+ Repetição" onPress={() => ops.adicionar(paiId, novaRepeticao())} />
+          <Chip
+            rotulo={t('avancado.addRepeticao')}
+            onPress={() => ops.adicionar(paiId, novaRepeticao())}
+          />
         ) : null}
       </View>
     </View>
@@ -159,19 +164,19 @@ function Controles(props: {
     <View style={estilos.linha}>
       <Chip
         rotulo="↑"
-        acessibilidade="Mover para cima"
+        acessibilidade={t('avancado.acima')}
         desativado={posicao.primeiro}
         onPress={() => ops.mover(id, -1)}
       />
       <Chip
         rotulo="↓"
-        acessibilidade="Mover para baixo"
+        acessibilidade={t('avancado.abaixo')}
         desativado={posicao.ultimo}
         onPress={() => ops.mover(id, 1)}
       />
       <Chip
         rotulo="✕"
-        acessibilidade="Remover"
+        acessibilidade={t('avancado.remover')}
         perigo
         onPress={props.onRemover ?? (() => ops.remover(id))}
       />
@@ -200,14 +205,14 @@ function NoEtapa(props: { etapa: Etapa; posicao: Posicao; ops: Operacoes }) {
         style={[e.entrada, estilos.entradaNome]}
         value={etapa.nome ?? ''}
         onChangeText={(nome) => alterar({ nome: nome || undefined })}
-        placeholder={`Nome (opcional) — ${APARENCIA[etapa.categoria].rotulo}`}
+        placeholder={t('avancado.nomeOpcional', { categoria: APARENCIA[etapa.categoria].rotulo })}
         placeholderTextColor="#6b7280"
         maxLength={40}
-        accessibilityLabel="Nome da etapa"
+        accessibilityLabel={t('avancado.nomeEtapa')}
       />
       <View style={estilos.linha}>
         <Chip
-          rotulo="Tempo"
+          rotulo={t('avancado.tempo')}
           selecionado={etapa.fim.tipo === 'tempo'}
           onPress={() =>
             etapa.fim.tipo === 'tempo' ||
@@ -215,7 +220,7 @@ function NoEtapa(props: { etapa: Etapa; posicao: Posicao; ops: Operacoes }) {
           }
         />
         <Chip
-          rotulo="Manual"
+          rotulo={t('avancado.manual')}
           selecionado={etapa.fim.tipo === 'manual'}
           onPress={() => alterar({ fim: { tipo: 'manual' } })}
         />
@@ -223,7 +228,7 @@ function NoEtapa(props: { etapa: Etapa; posicao: Posicao; ops: Operacoes }) {
           <View style={estilos.segundos}>
             <CampoNumero
               estilo={[e.entrada, estilos.entradaSegundos]}
-              rotulo="Segundos da etapa"
+              rotulo={t('avancado.segundosEtapa')}
               valor={etapa.fim.segundos}
               min={1}
               max={LIMITES_AVANCADO.segundos}
@@ -249,20 +254,20 @@ function NoRepeticao(props: {
 
   function remover() {
     if (repeticao.itens.length === 0) return ops.remover(repeticao.id);
-    Alert.alert('Remover repetição?', 'As etapas dentro dela também serão removidas.', [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Remover', style: 'destructive', onPress: () => ops.remover(repeticao.id) },
+    Alert.alert(t('avancado.removerRepTitulo'), t('avancado.removerRepMsg'), [
+      { text: t('geral.cancelar'), style: 'cancel' },
+      { text: t('geral.remover'), style: 'destructive', onPress: () => ops.remover(repeticao.id) },
     ]);
   }
 
   return (
     <View style={[estilos.no, estilos.noRepeticao]}>
       <View style={estilos.linha}>
-        <Text style={estilos.titulo}>Repetir</Text>
+        <Text style={estilos.titulo}>{t('avancado.repetir')}</Text>
         <View style={estilos.segundos}>
           <CampoNumero
             estilo={[e.entrada, estilos.entradaSegundos]}
-            rotulo="Número de vezes"
+            rotulo={t('avancado.numVezes')}
             valor={repeticao.vezes}
             min={1}
             max={LIMITES_AVANCADO.vezes}
@@ -270,7 +275,7 @@ function NoRepeticao(props: {
               ops.atualizar(repeticao.id, (i) => ({ ...(i as Repeticao), vezes }))
             }
           />
-          <Text style={estilos.unidade}>vezes</Text>
+          <Text style={estilos.unidade}>{t('avancado.vezes')}</Text>
         </View>
       </View>
       {erro ? <Text style={e.erro}>{erro}</Text> : null}

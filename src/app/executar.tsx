@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { t } from '../i18n/t';
 import { APARENCIA, COR_CONCLUIDO, COR_PRONTO, formatarTempo } from '../execucao/aparencia';
 import { useLinhaDoTempo } from '../execucao/useLinhaDoTempo';
 import { pedirPermissaoNotificacoes, useNotificacoesDaExecucao } from '../execucao/notificacoes';
@@ -48,7 +49,7 @@ export default function Executar() {
 
   const exemplo = useMemo(
     () =>
-      treinoDeRounds('exemplo', 'Exemplo', {
+      treinoDeRounds('exemplo', t('executar.exemplo'), {
         rounds: Math.max(1, Math.floor(numero(params.rounds, 4))),
         segundosRound: Math.max(1, numero(params.trabalho, 20)),
         segundosDescanso: numero(params.descanso, 10),
@@ -61,8 +62,8 @@ export default function Executar() {
   if (params.id && !salvo) {
     return (
       <View style={estilos.carregando}>
-        <Text style={estilos.titulo}>{falhou ? 'Treino não encontrado' : ''}</Text>
-        {falhou ? <Botao rotulo="Voltar" onPress={() => router.back()} /> : null}
+        <Text style={estilos.titulo}>{falhou ? t('executar.naoEncontrado') : ''}</Text>
+        {falhou ? <Botao rotulo={t('geral.voltar')} onPress={() => router.back()} /> : null}
       </View>
     );
   }
@@ -92,7 +93,7 @@ function Execucao({ treino }: { treino: Treino }) {
       ? formatarTempo(decorridoNoPassoMs(estado, agora))
       : formatarTempo(restante, true);
   const rodadas = passo.rodadas.map((r) => `${r.atual}/${r.total}`).join(' · ');
-  const titulo = concluido ? 'Concluído' : (passo.nome ?? aparencia.rotulo);
+  const titulo = concluido ? t('executar.concluido') : (passo.nome ?? aparencia.rotulo);
   const manual = passo.fim.tipo === 'manual';
 
   return (
@@ -105,36 +106,38 @@ function Execucao({ treino }: { treino: Treino }) {
       <View style={estilos.topo}>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Sair"
+          accessibilityLabel={t('executar.sair')}
           onPress={() => router.back()}
         >
           <Text style={estilos.sair}>✕</Text>
         </Pressable>
-        <Text style={estilos.total}>Total {formatarTempo(tempoTotalMs(estado, agora))}</Text>
+        <Text style={estilos.total}>
+          {t('executar.total', { tempo: formatarTempo(tempoTotalMs(estado, agora)) })}
+        </Text>
       </View>
 
       <View style={estilos.centro}>
         <Text style={estilos.titulo} accessibilityRole="header">
-          {pronto ? 'Pronto?' : titulo}
+          {pronto ? t('executar.pronto') : titulo}
         </Text>
         {!pronto && !concluido && rodadas ? (
-          <Text style={estilos.rodadas}>Round {rodadas}</Text>
+          <Text style={estilos.rodadas}>{t('executar.round', { rodadas })}</Text>
         ) : null}
         {!pronto && !concluido ? (
           <Text style={estilos.passos}>
-            Etapa {passo.indice + 1} de {estado.passos.length}
+            {t('executar.etapaDe', { n: passo.indice + 1, total: estado.passos.length })}
           </Text>
         ) : null}
         <Text style={estilos.relogio} accessibilityLiveRegion="none">
           {relogio}
         </Text>
-        {pausado ? <Text style={estilos.rodadas}>Pausado</Text> : null}
+        {pausado ? <Text style={estilos.rodadas}>{t('executar.pausado')}</Text> : null}
       </View>
 
       <View style={estilos.botoes}>
         {pronto ? (
           <Botao
-            rotulo="Iniciar"
+            rotulo={t('executar.iniciar')}
             grande
             onPress={() => {
               acoes.iniciar();
@@ -143,20 +146,20 @@ function Execucao({ treino }: { treino: Treino }) {
           />
         ) : concluido ? (
           <>
-            <Botao rotulo="Refazer" onPress={acoes.reiniciar} />
-            <Botao rotulo="Fechar" onPress={() => router.back()} />
+            <Botao rotulo={t('executar.refazer')} onPress={acoes.reiniciar} />
+            <Botao rotulo={t('executar.fechar')} onPress={() => router.back()} />
           </>
         ) : (
           <>
-            <Botao rotulo="◀◀" acessibilidade="Voltar" onPress={acoes.voltar} />
+            <Botao rotulo="◀◀" acessibilidade={t('geral.voltar')} onPress={acoes.voltar} />
             <Botao
-              rotulo={pausado ? 'Retomar' : 'Pausar'}
+              rotulo={pausado ? t('executar.retomar') : t('executar.pausar')}
               grande
               onPress={pausado ? acoes.retomar : acoes.pausar}
             />
             <Botao
-              rotulo={manual ? 'Próxima' : '▶▶'}
-              acessibilidade="Avançar"
+              rotulo={manual ? t('executar.proxima') : '▶▶'}
+              acessibilidade={t('executar.avancar')}
               onPress={acoes.avancar}
             />
           </>

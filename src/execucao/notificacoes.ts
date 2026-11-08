@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
 
 import { proximasTransicoes, type Estado } from '../motor';
+import { t } from '../i18n/t';
 import { APARENCIA } from './aparencia';
 
 // Notificações locais agendadas para cada troca de etapa: com a tela bloqueada ou o app em segundo
@@ -29,7 +30,7 @@ async function garantirCanal() {
   for (const id of CANAIS_ANTIGOS)
     await Notifications.deleteNotificationChannelAsync(id).catch(() => {});
   await Notifications.setNotificationChannelAsync(CANAL, {
-    name: 'Trocas de etapa',
+    name: t('aviso.canal'),
     importance: AndroidImportance.HIGH,
     // Mudo de propósito: o som vem do áudio nativo da linha do tempo (linhaDoTempo.ts); a notificação
     // fica só como aviso visual e vibração, sem tocar o "pingo" do sistema em cima do gongo.
@@ -74,16 +75,19 @@ async function cancelarTodas() {
 async function agendar(estado: Estado) {
   await cancelarTodas();
   const agora = Date.now();
-  for (const t of proximasTransicoes(estado, agora, MAX_AGENDADAS)) {
-    const titulo = t.passo
-      ? (t.passo.nome ?? APARENCIA[t.passo.categoria].rotulo)
-      : 'Treino concluído';
+  for (const tr of proximasTransicoes(estado, agora, MAX_AGENDADAS)) {
+    const titulo = tr.passo
+      ? (tr.passo.nome ?? APARENCIA[tr.passo.categoria].rotulo)
+      : t('aviso.concluido');
     try {
       await Notifications.scheduleNotificationAsync({
-        content: { title: titulo, body: t.passo ? 'Próxima etapa' : 'Bom trabalho!' },
+        content: {
+          title: titulo,
+          body: tr.passo ? t('aviso.proximaEtapa') : t('aviso.bomTrabalho'),
+        },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DATE,
-          date: new Date(t.em),
+          date: new Date(tr.em),
           channelId: CANAL,
           delivery: 'alarmClock',
         },
