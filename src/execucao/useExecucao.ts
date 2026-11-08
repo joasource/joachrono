@@ -13,10 +13,10 @@ import {
   type Evento,
   type Passo,
 } from '../motor';
+import { obterConfiguracoes } from '../configuracoes/store';
 import { useSinais } from './useSinais';
 
 const INTERVALO_MS = 100;
-const CONTAGEM_REGRESSIVA_S = 3;
 
 /** Liga a máquina de estados do motor ao relógio, ao som e à vibração. */
 export function useExecucao(passos: Passo[]) {
@@ -56,7 +56,8 @@ export function useExecucao(passos: Passo[]) {
       const resta = restanteMs(atual, t);
       if (resta === null) return;
       const s = Math.ceil(resta / 1000);
-      if (s >= 1 && s <= CONTAGEM_REGRESSIVA_S && ultimoSegundoAvisado.current !== s) {
+      const contagem = obterConfiguracoes().contagemSegundos;
+      if (s >= 1 && s <= contagem && ultimoSegundoAvisado.current !== s) {
         ultimoSegundoAvisado.current = s;
         sinaisRef.current.sinalContagem();
       }

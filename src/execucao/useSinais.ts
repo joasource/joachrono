@@ -2,6 +2,8 @@ import { setAudioModeAsync, useAudioPlayer } from 'expo-audio';
 import * as Haptics from 'expo-haptics';
 import { useCallback, useEffect } from 'react';
 
+import { GANHO_DO_VOLUME } from '../configuracoes/modelo';
+import { obterConfiguracoes } from '../configuracoes/store';
 import { somNativo } from './somNativo';
 
 const SOM_CONTAGEM = require('../../assets/sons/contagem.wav');
@@ -21,9 +23,15 @@ export function useSinais() {
     );
   }, []);
 
-  const tocar = (player: { seekTo: (s: number) => Promise<void>; play: () => void }) => {
-    if (somNativo.ativo) return;
+  const tocar = (player: {
+    seekTo: (s: number) => Promise<void>;
+    play: () => void;
+    volume: number;
+  }) => {
+    const c = obterConfiguracoes();
+    if (somNativo.ativo || !c.som) return;
     try {
+      player.volume = GANHO_DO_VOLUME[c.volume];
       void player.seekTo(0);
       player.play();
     } catch {}
@@ -31,17 +39,20 @@ export function useSinais() {
 
   const sinalContagem = useCallback(() => {
     tocar(contagem);
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    if (obterConfiguracoes().vibracao)
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
   }, [contagem]);
 
   const sinalTroca = useCallback(() => {
     tocar(troca);
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(() => {});
+    if (obterConfiguracoes().vibracao)
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy).catch(() => {});
   }, [troca]);
 
   const sinalFim = useCallback(() => {
     tocar(fim);
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+    if (obterConfiguracoes().vibracao)
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
   }, [fim]);
 
   return { sinalContagem, sinalTroca, sinalFim };

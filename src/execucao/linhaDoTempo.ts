@@ -5,7 +5,6 @@ import { proximasTransicoes, type Estado } from '../motor';
 // WAV mono, 8 bits sem sinal, 8 kHz: ~8 KB/s (1 h ≈ 29 MB).
 export const TAXA_HZ = 8000;
 export const LIMITE_MS = 60 * 60 * 1000;
-const CONTAGEM_REGRESSIVA_S = 3;
 const SILENCIO = 128;
 
 function escrever32(v: DataView, pos: number, valor: number) {
@@ -30,14 +29,14 @@ function cabecalho(bytesDeDados: number): Uint8Array {
   return buf;
 }
 
-function bipe(dados: Uint8Array, inicioMs: number, hz: number, duracaoMs: number) {
+function bipe(dados: Uint8Array, inicioMs: number, hz: number, duracaoMs: number, ganho: number) {
   const ini = Math.round((inicioMs * TAXA_HZ) / 1000);
   const n = Math.round((duracaoMs * TAXA_HZ) / 1000);
   const rampa = Math.max(1, Math.round(0.005 * TAXA_HZ));
   for (let i = 0; i < n && ini + i < dados.length; i++) {
     if (ini + i < 0) continue;
     const env = Math.min(1, i / rampa, (n - i) / rampa);
-    somar(dados, ini + i, 120 * env * Math.sin((2 * Math.PI * hz * i) / TAXA_HZ));
+    somar(dados, ini + i, 120 * ganho * env * Math.sin((2 * Math.PI * hz * i) / TAXA_HZ));
   }
 }
 
@@ -57,7 +56,7 @@ const GONGO = [
 ];
 const GONGO_MS = 2200;
 
-function gongo(dados: Uint8Array, inicioMs: number) {
+function gongo(dados: Uint8Array, inicioMs: number, ganho: number) {
   const ini = Math.round((inicioMs * TAXA_HZ) / 1000);
   const n = Math.round((GONGO_MS * TAXA_HZ) / 1000);
   const ataque = Math.round(0.003 * TAXA_HZ);
@@ -67,7 +66,7 @@ function gongo(dados: Uint8Array, inicioMs: number) {
     const t = i / TAXA_HZ;
     let v = 0;
     for (const p of GONGO) v += p.amp * Math.exp(-t / p.tau) * Math.sin(2 * Math.PI * p.hz * t);
-    somar(dados, ini + i, (125 * v * Math.min(1, i / ataque)) / soma);
+    somar(dados, ini + i, (125 * ganho * v * Math.min(1, i / ataque)) / soma);
   }
 }
 
@@ -79,6 +78,7 @@ function gongo(dados: Uint8Array, inicioMs: number) {
 export function gerarLinhaDoTempoWav(
   estado: Estado,
   agora: number,
+  { ganho = 1, contagemSegundos = 3 }: { ganho?: number; contagemSegundos?: number } = {},
 ): { wav: Uint8Array; instantes: number[] } | null {
   const transicoes = proximasTransicoes(estado, agora, 5000).filter(
     (t) => t.em - agora <= LIMITE_MS,
@@ -95,14 +95,14 @@ export function gerarLinhaDoTempoWav(
   let anteriorMs = -Infinity;
   for (const t of transicoes) {
     const alvo = t.em - agora;
-    for (let s = CONTAGEM_REGRESSIVA_S; s >= 1; s--) {
+    for (let s = contagemSegundos; s >= 1; s--) {
       const inicio = alvo - s * 1000;
       // Não encosta no sinal da troca anterior nem começa antes de agora.
-      if (inicio >= 0 && inicio >= anteriorMs + 500) bipe(dados, inicio, 880, 120);
+      if (inicio >= 0 && inicio >= anteriorMs + 500) bipe(dados, inicio, 880, 120, ganho);
     }
     // Troca: uma batida; fim do treino: duas.
-    gongo(dados, alvo);
-    if (t.evento.tipo === 'fim') gongo(dados, alvo + 900);
+    gongo(dados, alvo, ganho);
+    if (t.evento.tipo === 'fim') gongo(dados, alvo + 900, ganho);
     anteriorMs = alvo;
   }
   return { wav: arquivo, instantes: transicoes.map((t) => t.em) };

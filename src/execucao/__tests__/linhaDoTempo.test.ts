@@ -47,4 +47,17 @@ describe('gerarLinhaDoTempoWav', () => {
     });
     expect(gerarLinhaDoTempoWav(iniciar(criar(passos), 0), 0)).toBeNull();
   });
+
+  it('respeita a contagem regressiva e o volume escolhidos', () => {
+    const dados = (o?: { ganho?: number; contagemSegundos?: number }) =>
+      gerarLinhaDoTempoWav(estadoIniciado(0), 0, o)!.wav.subarray(44);
+    const ativo = (d: Uint8Array, ms: number) => {
+      const i = Math.round((ms * TAXA_HZ) / 1000);
+      return d.subarray(i, i + 200).some((b) => b !== 128);
+    };
+    expect(ativo(dados({ contagemSegundos: 0 }), 7100)).toBe(false);
+    expect(ativo(dados({ contagemSegundos: 5 }), 5100)).toBe(true);
+    const pico = (d: Uint8Array) => d.reduce((m, b) => Math.max(m, Math.abs(b - 128)), 0);
+    expect(pico(dados({ ganho: 0.35 }))).toBeLessThan(pico(dados({ ganho: 1 })));
+  });
 });

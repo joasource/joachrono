@@ -3,6 +3,8 @@ import { File, Paths } from 'expo-file-system';
 import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
 
+import { GANHO_DO_VOLUME } from '../configuracoes/modelo';
+import { obterConfiguracoes, useConfiguracoes } from '../configuracoes/store';
 import { t } from '../i18n/t';
 import type { Estado } from '../motor';
 import { gerarLinhaDoTempoWav } from './linhaDoTempo';
@@ -38,6 +40,8 @@ export function useLinhaDoTempo(estado: Estado) {
   const alternar = useRef(0);
   const cobertas = useRef<number[]>([]);
   const { status, indice, retomadoEm, acumuladoMs } = estado;
+  const config = useConfiguracoes();
+  const habilitado = config.som && config.sinaisBloqueado;
   const estadoRef = useRef(estado);
   useEffect(() => {
     estadoRef.current = estado;
@@ -53,7 +57,7 @@ export function useLinhaDoTempo(estado: Estado) {
     };
     // Fim natural: deixa os bipes finais terminarem em vez de calar o player.
     if (status === 'concluido') return;
-    if (status !== 'contando') {
+    if (status !== 'contando' || !habilitado) {
       cobertas.current = [];
       parar();
       return;
@@ -64,7 +68,11 @@ export function useLinhaDoTempo(estado: Estado) {
     void (async () => {
       try {
         const t0 = Date.now();
-        const linha = gerarLinhaDoTempoWav(estadoRef.current, t0);
+        const c = obterConfiguracoes();
+        const linha = gerarLinhaDoTempoWav(estadoRef.current, t0, {
+          ganho: GANHO_DO_VOLUME[c.volume],
+          contagemSegundos: c.contagemSegundos,
+        });
         if (!linha) return parar();
         const { wav, instantes } = linha;
         const arquivo = new File(Paths.cache, `linha-do-tempo-${alternar.current++ % 2}.wav`);
@@ -94,7 +102,7 @@ export function useLinhaDoTempo(estado: Estado) {
       }
     })();
     // Só regenera quando a linha do tempo muda (não a cada tick).
-  }, [status, indice, retomadoEm, acumuladoMs]);
+  }, [status, indice, retomadoEm, acumuladoMs, habilitado]);
 
   useEffect(() => {
     const sub = AppState.addEventListener('change', (novo) => {

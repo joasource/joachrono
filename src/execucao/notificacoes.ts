@@ -1,9 +1,14 @@
 import * as Notifications from 'expo-notifications';
-import { AndroidImportance, AndroidNotificationVisibility } from 'expo-notifications';
+import {
+  AndroidAudioUsage,
+  AndroidImportance,
+  AndroidNotificationVisibility,
+} from 'expo-notifications';
 import { useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
 
 import { proximasTransicoes, type Estado } from '../motor';
+import { obterConfiguracoes } from '../configuracoes/store';
 import { t } from '../i18n/t';
 import { APARENCIA } from './aparencia';
 
@@ -11,8 +16,18 @@ import { APARENCIA } from './aparencia';
 // plano o JS pode ser suspenso, mas o sistema entrega o alerta na hora certa. O iOS guarda no máximo
 // 64 agendadas, então agendamos só as próximas e reagendamos a cada mudança de estado.
 // Canais Android são imutáveis depois de criados: ao mudar som/importância, troque o id (v2...).
-const CANAL = 'etapas-v5';
-const CANAIS_ANTIGOS = ['etapas-v2', 'etapas-v4'];
+const CANAIS_ANTIGOS = ['etapas-v2', 'etapas-v4', 'etapas-v5'];
+
+/**
+ * A notificação só toca o som do sistema quando o áudio nativo da linha do tempo não está
+ * cobrindo os sinais (senão tocaria em cima do gongo). Som e vibração de um canal Android não mudam
+ * depois de criado, então cada combinação tem o seu id.
+ */
+function configDoCanal() {
+  const c = obterConfiguracoes();
+  const som = c.som && !c.sinaisBloqueado;
+  return { som, vibracao: c.vibracao, id: `etapas-v6-${som ? 's' : 'm'}${c.vibracao ? 'v' : 'n'}` };
+}
 const MAX_AGENDADAS = 30;
 
 Notifications.setNotificationHandler({
@@ -29,15 +44,16 @@ async function garantirCanal() {
   if (Platform.OS !== 'android') return;
   for (const id of CANAIS_ANTIGOS)
     await Notifications.deleteNotificationChannelAsync(id).catch(() => {});
-  await Notifications.setNotificationChannelAsync(CANAL, {
+  const { id, som, vibracao } = configDoCanal();
+  await Notifications.setNotificationChannelAsync(id, {
     name: t('aviso.canal'),
     importance: AndroidImportance.HIGH,
-    // Mudo de propósito: o som vem do áudio nativo da linha do tempo (linhaDoTempo.ts); a notificação
-    // fica só como aviso visual e vibração, sem tocar o "pingo" do sistema em cima do gongo.
-    sound: null,
-    enableVibrate: true,
+    // Sem `sound` o módulo usa o som padrão do sistema ('default' seria lido como um arquivo
+    // inexistente e deixaria o canal mudo). `null` = mudo.
+    ...(som ? { audioAttributes: { usage: AndroidAudioUsage.ALARM } } : { sound: null }),
+    enableVibrate: vibracao,
     lockscreenVisibility: AndroidNotificationVisibility.PUBLIC,
-    vibrationPattern: [0, 250, 150, 250],
+    ...(vibracao ? { vibrationPattern: [0, 250, 150, 250] } : {}),
   });
 }
 
@@ -88,7 +104,7 @@ async function agendar(estado: Estado) {
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DATE,
           date: new Date(tr.em),
-          channelId: CANAL,
+          channelId: configDoCanal().id,
           delivery: 'alarmClock',
         },
       });

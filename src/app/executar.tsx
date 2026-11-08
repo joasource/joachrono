@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { obterConfiguracoes } from '../configuracoes/store';
 import { t } from '../i18n/t';
 import { APARENCIA, COR_CONCLUIDO, COR_PRONTO, formatarTempo } from '../execucao/aparencia';
 import { useLinhaDoTempo } from '../execucao/useLinhaDoTempo';
@@ -141,7 +142,11 @@ function Execucao({ treino }: { treino: Treino }) {
             grande
             onPress={() => {
               acoes.iniciar();
-              void pedirPermissaoNotificacoes().then(setNotificar);
+              if (obterConfiguracoes().notificacoes) {
+                void pedirPermissaoNotificacoes().then(setNotificar);
+              } else {
+                setNotificar(false);
+              }
             }}
           />
         ) : concluido ? (

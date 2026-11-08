@@ -21,9 +21,19 @@ export default function Inicio() {
 
   return (
     <View style={[estilos.tela, { paddingTop: insets.top + 16, paddingBottom: insets.bottom }]}>
-      <Text style={estilos.titulo} accessibilityRole="header">
-        Joachrono
-      </Text>
+      <View style={estilos.topo}>
+        <Text style={estilos.titulo} accessibilityRole="header">
+          Joachrono
+        </Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('config.abrir')}
+          onPress={() => router.push('/configuracoes')}
+          style={estilos.engrenagem}
+        >
+          <Text style={estilos.engrenagemTexto}>⚙</Text>
+        </Pressable>
+      </View>
       <FlatList
         data={treinos ?? []}
         keyExtractor={(treino) => treino.id}
@@ -66,7 +76,15 @@ export default function Inicio() {
 
 const estilos = StyleSheet.create({
   tela: { flex: 1, paddingHorizontal: 20 },
-  titulo: { color: '#fff', fontSize: 32, fontWeight: '700', marginBottom: 16 },
+  topo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  titulo: { color: '#fff', fontSize: 32, fontWeight: '700' },
+  engrenagem: { minWidth: 48, minHeight: 48, alignItems: 'center', justifyContent: 'center' },
+  engrenagemTexto: { color: '#fff', fontSize: 28 },
   lista: { gap: 12, paddingBottom: 16 },
   vazio: { color: '#9ca3af', fontSize: 16, textAlign: 'center', marginTop: 40 },
   cartao: {
