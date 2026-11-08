@@ -16,5 +16,5 @@ export function useTreinos() {
       };
     }, []),
   );
-  return treinos;
+  return [treinos, setTreinos] as const;
 }

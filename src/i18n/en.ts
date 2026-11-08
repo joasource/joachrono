@@ -36,6 +36,12 @@ export const en: Traducoes = {
     iniciarA11y: 'Start %{nome}',
     editarA11y: 'Edit %{nome}',
     avancado: 'Advanced · %{passos} steps · %{tempo}',
+    selecionados: { one: '%{count} selected', other: '%{count} selected' },
+    selecionarTodos: 'Select all',
+    cancelarSelecao: 'Cancel selection',
+    excluirSelecionados: 'Delete selected',
+    marcarA11y: 'Select %{nome}',
+    excluirVarios: { one: 'Delete %{count} workout?', other: 'Delete %{count} workouts?' },
   },
   config: {
     titulo: 'Settings',

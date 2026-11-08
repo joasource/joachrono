@@ -34,6 +34,12 @@ export const pt = {
     iniciarA11y: 'Iniciar %{nome}',
     editarA11y: 'Editar %{nome}',
     avancado: 'Avançado · %{passos} etapas · %{tempo}',
+    selecionados: { one: '%{count} selecionado', other: '%{count} selecionados' },
+    selecionarTodos: 'Selecionar todos',
+    cancelarSelecao: 'Cancelar seleção',
+    excluirSelecionados: 'Excluir selecionados',
+    marcarA11y: 'Selecionar %{nome}',
+    excluirVarios: { one: 'Excluir %{count} treino?', other: 'Excluir %{count} treinos?' },
   },
   config: {
     titulo: 'Configurações',
