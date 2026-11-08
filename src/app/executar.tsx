@@ -1,11 +1,13 @@
 import { useKeepAwake } from 'expo-keep-awake';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { APARENCIA, COR_CONCLUIDO, COR_PRONTO, formatarTempo } from '../execucao/aparencia';
 import { useExecucao } from '../execucao/useExecucao';
+import { carregarTreinos } from '../treinos/armazenamento';
+import { paraTreino } from '../treinos/modelo';
 import {
   compilar,
   decorridoNoPassoMs,
@@ -13,32 +15,62 @@ import {
   restanteMs,
   tempoTotalMs,
   treinoDeRounds,
+  type Treino,
 } from '../motor';
 
-// Até a fase 3 (lista de treinos), a tela executa um treino de exemplo; os parâmetros
-// opcionais da rota (?rounds=&trabalho=&descanso=) permitem testar outras combinações.
+// Com `?id=` executa o treino salvo; sem ele, um treino de exemplo (parâmetros opcionais
+// ?rounds=&trabalho=&descanso= permitem testar outras combinações).
 function numero(valor: string | string[] | undefined, padrao: number): number {
   const n = Number(Array.isArray(valor) ? valor[0] : valor);
   return Number.isFinite(n) && n >= 0 ? n : padrao;
 }
 
 export default function Executar() {
-  useKeepAwake();
-  const insets = useSafeAreaInsets();
-  const params = useLocalSearchParams<{ rounds?: string; trabalho?: string; descanso?: string }>();
-  const passos = useMemo(
+  const params = useLocalSearchParams<{
+    id?: string;
+    rounds?: string;
+    trabalho?: string;
+    descanso?: string;
+  }>();
+  const [salvo, setSalvo] = useState<Treino | null>(null);
+  const [falhou, setFalhou] = useState(false);
+
+  useEffect(() => {
+    if (!params.id) return;
+    carregarTreinos().then((lista) => {
+      const t = lista.find((x) => x.id === params.id);
+      if (t) setSalvo(paraTreino(t));
+      else setFalhou(true);
+    });
+  }, [params.id]);
+
+  const exemplo = useMemo(
     () =>
-      compilar(
-        treinoDeRounds('exemplo', 'Exemplo', {
-          rounds: Math.max(1, Math.floor(numero(params.rounds, 4))),
-          segundosRound: Math.max(1, numero(params.trabalho, 20)),
-          segundosDescanso: numero(params.descanso, 10),
-          segundosAquecimento: 10,
-          segundosDesaquecimento: 10,
-        }),
-      ),
+      treinoDeRounds('exemplo', 'Exemplo', {
+        rounds: Math.max(1, Math.floor(numero(params.rounds, 4))),
+        segundosRound: Math.max(1, numero(params.trabalho, 20)),
+        segundosDescanso: numero(params.descanso, 10),
+        segundosAquecimento: 10,
+        segundosDesaquecimento: 10,
+      }),
     [params.rounds, params.trabalho, params.descanso],
   );
+
+  if (params.id && !salvo) {
+    return (
+      <View style={estilos.carregando}>
+        <Text style={estilos.titulo}>{falhou ? 'Treino não encontrado' : ''}</Text>
+        {falhou ? <Botao rotulo="Voltar" onPress={() => router.back()} /> : null}
+      </View>
+    );
+  }
+  return <Execucao treino={salvo ?? exemplo} />;
+}
+
+function Execucao({ treino }: { treino: Treino }) {
+  useKeepAwake();
+  const insets = useSafeAreaInsets();
+  const passos = useMemo(() => compilar(treino), [treino]);
   const { estado, agora, acoes } = useExecucao(passos);
 
   const passo = passoAtual(estado);
@@ -145,6 +177,7 @@ function Botao(props: {
 }
 
 const estilos = StyleSheet.create({
+  carregando: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16 },
   tela: { flex: 1, paddingHorizontal: 20 },
   topo: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   sair: { color: '#fff', fontSize: 28, padding: 8 },
