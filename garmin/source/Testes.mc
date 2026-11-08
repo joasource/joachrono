@@ -141,3 +141,43 @@ function testeLivreContaPausaEMarcaVoltas(logger as Logger) as Boolean {
     Test.assertEqual(l.decorridoMs(105000), 45000);
     return true;
 }
+
+(:test)
+function testeEdicaoDeTempoMinutosESegundosSeparados(logger as Logger) as Boolean {
+    var c = campoTempo("t", Rez.Strings.TempoTrabalho, 1, false);
+    // Segundos: passo exato de 1 e volta de 59 para 0 sem mexer nos minutos.
+    Test.assertEqual(mudarValor(c, 90, 1, 1), 91);
+    Test.assertEqual(mudarValor(c, 119, 1, 1), 60);
+    Test.assertEqual(mudarValor(c, 60, -1, 1), 119);
+    // Minutos: passo de 60 s, sem mexer nos segundos.
+    Test.assertEqual(mudarValor(c, 95, 1, 0), 155);
+    Test.assertEqual(mudarValor(c, 95, -1, 0), 35);
+    // Limites: nunca abaixo do mínimo (1 s) nem acima de 60:00.
+    Test.assertEqual(mudarValor(c, 1, -1, 1), 1); // 0 s ficaria abaixo do mínimo: fica em 1 s
+    return true;
+}
+
+(:test)
+function testeEdicaoDeTempoLimites(logger as Logger) as Boolean {
+    var c = campoTempo("t", Rez.Strings.TempoTrabalho, 1, false);
+    Test.assertEqual(mudarValor(c, 3600, 1, 0), 3600);
+    Test.assertEqual(mudarValor(c, 3599, 1, 1), 3540);
+    Test.assertEqual(mudarValor(c, 5, -1, 0), 5); // minutos não ficam negativos
+    var m = campoTempo("s", Rez.Strings.Tempo, 0, true);
+    Test.assertEqual(mudarValor(m, 0, -1, 0), 0);
+    return true;
+}
+
+(:test)
+function testeEdicaoDeNumeroEscolhaEBool(logger as Logger) as Boolean {
+    var n = campoNum("r", Rez.Strings.Rounds, 1, 99);
+    Test.assertEqual(mudarValor(n, 99, 1, 0), 99);
+    Test.assertEqual(mudarValor(n, 1, -1, 0), 1);
+    Test.assertEqual(mudarValor(n, 8, 1, 0), 9);
+    var e = campoEscolha("c", Rez.Strings.Tipo, [Rez.Strings.CatAquecer, Rez.Strings.CatTrabalho, Rez.Strings.CatDescanso] as Array<ResourceId>);
+    Test.assertEqual(mudarValor(e, 2, 1, 0), 0);
+    Test.assertEqual(mudarValor(e, 0, -1, 0), 2);
+    var b = campoBool("p", Rez.Strings.PularUltimo);
+    Test.assertEqual(mudarValor(b, 1, 1, 0), 0);
+    return true;
+}

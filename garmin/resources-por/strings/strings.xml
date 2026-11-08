@@ -35,4 +35,14 @@
     <string id="DicaEditar">UP/DOWN · START avança</string>
     <string id="CronometroLivre">Cronômetro livre</string>
     <string id="Volta">Volta</string>
+    <string id="Min">MIN</string>
+    <string id="Seg">SEG</string>
+    <string id="Manual">0:00 = fim manual</string>
+    <string id="Tipo">Tipo</string>
+    <string id="Tempo">Tempo</string>
+    <string id="CatAquecer">Aquecer</string>
+    <string id="CatTrabalho">Trabalho</string>
+    <string id="CatDescanso">Descanso</string>
+    <string id="CatDesaquecer">Desaquecer</string>
+    <string id="CatLivre">Livre</string>
 </strings>

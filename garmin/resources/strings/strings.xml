@@ -35,4 +35,14 @@
     <string id="DicaEditar">UP/DOWN · START next</string>
     <string id="CronometroLivre">Free stopwatch</string>
     <string id="Volta">Lap</string>
+    <string id="Min">MIN</string>
+    <string id="Seg">SEC</string>
+    <string id="Manual">0:00 = manual end</string>
+    <string id="Tipo">Type</string>
+    <string id="Tempo">Time</string>
+    <string id="CatAquecer">Warm-up</string>
+    <string id="CatTrabalho">Work</string>
+    <string id="CatDescanso">Rest</string>
+    <string id="CatDesaquecer">Cool-down</string>
+    <string id="CatLivre">Free</string>
 </strings>

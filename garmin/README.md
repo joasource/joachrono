@@ -5,7 +5,7 @@ App Connect IQ (Monkey C, `watch-app`) que porta o motor do joaChrono para o rel
 ## O que faz (v1)
 
 - Lista de treinos do **modo simples** (rounds, trabalho, descanso, aquecimento, desaquecimento, pular último descanso), guardados no relógio. Vêm 3 exemplos na primeira execução.
-- Editor no relógio: UP/DOWN mudam o valor, START avança de campo (e salva no último), BACK volta um campo.
+- Editor no relógio (`Form.mc`): minutos e segundos separados, números exatos (1 s, 1 min), UP/DOWN mudam o valor e **segurar repete cada vez mais rápido**, START avança (minutos → segundos → próximo campo, e salva no último), BACK volta.
 - Treino: START pausa/retoma, DOWN próxima etapa, UP volta (reinicia a etapa depois de 3 s), BACK abre o menu Continuar / Salvar e sair / Descartar e sair. Trabalho aparece em fundo branco, o resto em fundo preto.
 - **Cronômetro livre** (item da lista): START inicia/pausa, DOWN marca volta (mostra as duas últimas), BACK abre o mesmo menu de saída; grava a atividade com as voltas.
 - Bipe e vibração nas trocas, contagem regressiva (0/3/5/10 s) e luz acesa na troca. Configurações no menu da lista.
@@ -19,9 +19,9 @@ Fora da v1: sincronizar treinos do celular, modo avançado (blocos "Repetir"), h
 ```
 source/Motor.mc       porte de src/motor (passos, máquina de estados, tempo por timestamps)
 source/Testes.mc      testes do motor (portados de motor.test.ts)
+source/Form.mc        formulário de edição (número, tempo mm:ss, escolha, sim/não) com repetição ao segurar
 source/Treinos.mc     treinos e configurações em Application.Storage
 source/Lista.mc       lista de treinos, ações e configurações (Menu2)
-source/Editar.mc      editor de treino
 source/Executar.mc    tela do treino + gravação da atividade
 source/Livre.mc       cronômetro livre com voltas (porte de livre.ts)
 source/Tela.mc        desvio da subtela circular do Instinct

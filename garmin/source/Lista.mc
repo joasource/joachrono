@@ -39,8 +39,7 @@ class ListaDelegate extends WatchUi.Menu2InputDelegate {
             menu.addItem(new WatchUi.MenuItem(Rez.Strings.Excluir, null, "excluir", null));
             WatchUi.pushView(menu, new AcaoDelegate(id as Number), WatchUi.SLIDE_LEFT);
         } else if ("novo".equals(id)) {
-            var v = new EditarView(-1, treinoPadrao());
-            WatchUi.pushView(v, new EditarDelegate(v), WatchUi.SLIDE_LEFT);
+            abrirEditorSimples(-1, treinoPadrao(), false);
         } else if ("livre".equals(id)) {
             var v = new LivreView();
             WatchUi.pushView(v, new LivreDelegate(v), WatchUi.SLIDE_LEFT);
@@ -73,8 +72,7 @@ class AcaoDelegate extends WatchUi.Menu2InputDelegate {
             var v = new ExecutarView(lista[_indice]);
             WatchUi.switchToView(v, new ExecutarDelegate(v), WatchUi.SLIDE_LEFT);
         } else if ("editar".equals(id)) {
-            var v = new EditarView(_indice, lista[_indice]);
-            WatchUi.switchToView(v, new EditarDelegate(v), WatchUi.SLIDE_LEFT);
+            abrirEditorSimples(_indice, lista[_indice], true);
         } else if ("excluir".equals(id)) {
             lista.remove(lista[_indice]);
             salvarTreinos(lista);
