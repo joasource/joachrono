@@ -78,7 +78,7 @@ export function FormSimples(props: {
           value={treino.nome}
           onChangeText={(nome) => setTreino({ ...treino, nome })}
           placeholder={t('form.exemploNome')}
-          placeholderTextColor="#6b7280"
+          placeholderTextColor="#9ca3af"
           maxLength={60}
         />
 

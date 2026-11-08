@@ -9,7 +9,11 @@ export function OpcaoSwitch(props: {
 }) {
   return (
     <View style={estilos.linha}>
-      <View style={estilos.texto}>
+      <View
+        style={estilos.texto}
+        importantForAccessibility="no-hide-descendants"
+        accessibilityElementsHidden
+      >
         <Text style={estilos.rotulo}>{props.rotulo}</Text>
         {props.dica ? <Text style={estilos.dica}>{props.dica}</Text> : null}
       </View>
@@ -17,6 +21,7 @@ export function OpcaoSwitch(props: {
         value={props.valor}
         onValueChange={props.onChange}
         accessibilityLabel={props.rotulo}
+        accessibilityHint={props.dica}
         trackColor={{ true: '#15803d' }}
       />
     </View>

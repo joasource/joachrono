@@ -82,7 +82,7 @@ export function EditorAvancado(props: {
           value={treino.nome}
           onChangeText={(nome) => setTreino((t) => ({ ...t, nome }))}
           placeholder={t('avancado.exemploNome')}
-          placeholderTextColor="#6b7280"
+          placeholderTextColor="#9ca3af"
           maxLength={60}
         />
 
@@ -215,7 +215,7 @@ function NoEtapa(props: { etapa: Etapa; posicao: Posicao; ops: Operacoes }) {
         value={etapa.nome ?? ''}
         onChangeText={(nome) => alterar({ nome: nome || undefined })}
         placeholder={t('avancado.nomeOpcional', { categoria: APARENCIA[etapa.categoria].rotulo })}
-        placeholderTextColor="#6b7280"
+        placeholderTextColor="#9ca3af"
         maxLength={40}
         accessibilityLabel={t('avancado.nomeEtapa')}
       />

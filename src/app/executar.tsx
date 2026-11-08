@@ -6,7 +6,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { obterConfiguracoes } from '../configuracoes/store';
 import { t } from '../i18n/t';
-import { APARENCIA, COR_CONCLUIDO, COR_PRONTO, formatarTempo } from '../execucao/aparencia';
+import {
+  APARENCIA,
+  COR_CONCLUIDO,
+  COR_PRONTO,
+  formatarTempo,
+  tempoFalado,
+} from '../execucao/aparencia';
 import { useLinhaDoTempo } from '../execucao/useLinhaDoTempo';
 import { pedirPermissaoNotificacoes, useNotificacoesDaExecucao } from '../execucao/notificacoes';
 import { useExecucao } from '../execucao/useExecucao';
@@ -88,6 +94,11 @@ function Execucao({ treino }: { treino: Treino }) {
   const fundo = pronto ? COR_PRONTO : concluido ? COR_CONCLUIDO : aparencia.fundo;
 
   const restante = restanteMs(estado, agora);
+  const relogioFalado = concluido
+    ? tempoFalado(tempoTotalMs(estado, agora))
+    : restante === null
+      ? tempoFalado(decorridoNoPassoMs(estado, agora))
+      : tempoFalado(restante, true);
   const relogio = concluido
     ? formatarTempo(tempoTotalMs(estado, agora))
     : restante === null
@@ -112,13 +123,22 @@ function Execucao({ treino }: { treino: Treino }) {
         >
           <Text style={estilos.sair}>✕</Text>
         </Pressable>
-        <Text style={estilos.total}>
+        <Text
+          style={estilos.total}
+          accessibilityLabel={t('executar.total', { tempo: tempoFalado(tempoTotalMs(estado, agora)) })}
+        >
           {t('executar.total', { tempo: formatarTempo(tempoTotalMs(estado, agora)) })}
         </Text>
       </View>
 
       <View style={estilos.centro}>
-        <Text style={estilos.titulo} accessibilityRole="header">
+        <Text
+          style={estilos.titulo}
+          accessibilityRole="header"
+          accessibilityLiveRegion="polite"
+          numberOfLines={2}
+          adjustsFontSizeToFit
+        >
           {pronto ? t('executar.pronto') : titulo}
         </Text>
         {!pronto && !concluido && rodadas ? (
@@ -129,10 +149,20 @@ function Execucao({ treino }: { treino: Treino }) {
             {t('executar.etapaDe', { n: passo.indice + 1, total: estado.passos.length })}
           </Text>
         ) : null}
-        <Text style={estilos.relogio} accessibilityLiveRegion="none">
+        <Text
+          style={estilos.relogio}
+          accessibilityLabel={relogioFalado}
+          accessibilityLiveRegion="none"
+          numberOfLines={1}
+          adjustsFontSizeToFit
+        >
           {relogio}
         </Text>
-        {pausado ? <Text style={estilos.rodadas}>{t('executar.pausado')}</Text> : null}
+        {pausado ? (
+          <Text style={estilos.rodadas} accessibilityLiveRegion="polite">
+            {t('executar.pausado')}
+          </Text>
+        ) : null}
       </View>
 
       <View style={estilos.botoes}>
@@ -200,12 +230,19 @@ const estilos = StyleSheet.create({
   carregando: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16 },
   tela: { flex: 1, paddingHorizontal: 20 },
   topo: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  sair: { color: '#fff', fontSize: 28, padding: 8 },
-  total: { color: 'rgba(255,255,255,0.8)', fontSize: 16, fontVariant: ['tabular-nums'] },
+  sair: {
+    color: '#fff',
+    fontSize: 28,
+    minWidth: 48,
+    minHeight: 48,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+  },
+  total: { color: '#fff', fontSize: 16, fontVariant: ['tabular-nums'] },
   centro: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 },
   titulo: { color: '#fff', fontSize: 40, fontWeight: '800', textAlign: 'center' },
-  rodadas: { color: 'rgba(255,255,255,0.9)', fontSize: 22 },
-  passos: { color: 'rgba(255,255,255,0.7)', fontSize: 16 },
+  rodadas: { color: '#fff', fontSize: 22 },
+  passos: { color: '#fff', fontSize: 16 },
   relogio: { color: '#fff', fontSize: 96, fontWeight: '700', fontVariant: ['tabular-nums'] },
   botoes: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 12 },
   botao: {

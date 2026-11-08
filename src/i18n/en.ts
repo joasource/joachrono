@@ -10,7 +10,18 @@ export const en: Traducoes = {
     semNome: 'Untitled workout',
     voltar: 'Back',
   },
-  tempo: { min: 'min', seg: 's', minutos: 'minutes', segundos: 'seconds' },
+  tempo: {
+    min: 'min',
+    seg: 's',
+    minutos: 'minutes',
+    segundos: 'seconds',
+    falado: {
+      horas: { one: '%{count} hour', other: '%{count} hours' },
+      minutos: { one: '%{count} minute', other: '%{count} minutes' },
+      segundos: { one: '%{count} second', other: '%{count} seconds' },
+      e: ' and ',
+    },
+  },
   etapa: {
     aquecer: 'Warm up',
     trabalho: 'Work',

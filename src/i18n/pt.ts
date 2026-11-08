@@ -8,7 +8,18 @@ export const pt = {
     semNome: 'Treino sem nome',
     voltar: 'Voltar',
   },
-  tempo: { min: 'min', seg: 's', minutos: 'minutos', segundos: 'segundos' },
+  tempo: {
+    min: 'min',
+    seg: 's',
+    minutos: 'minutos',
+    segundos: 'segundos',
+    falado: {
+      horas: { one: '%{count} hora', other: '%{count} horas' },
+      minutos: { one: '%{count} minuto', other: '%{count} minutos' },
+      segundos: { one: '%{count} segundo', other: '%{count} segundos' },
+      e: ' e ',
+    },
+  },
   etapa: {
     aquecer: 'Aquecer',
     trabalho: 'Trabalho',

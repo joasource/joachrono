@@ -11,14 +11,14 @@ export function Segmentos<T extends string | number>(props: {
   return (
     <View style={[estilos.bloco, props.desativado && estilos.desativado]}>
       <Text style={estilos.rotulo}>{props.rotulo}</Text>
-      <View style={estilos.linha}>
+      <View style={estilos.linha} accessibilityRole="radiogroup" accessibilityLabel={props.rotulo}>
         {props.opcoes.map((o) => {
           const selecionado = o.valor === props.valor;
           return (
             <Pressable
               key={String(o.valor)}
-              accessibilityRole="button"
-              accessibilityState={{ selected: selecionado, disabled: props.desativado }}
+              accessibilityRole="radio"
+              accessibilityState={{ checked: selecionado, disabled: props.desativado }}
               disabled={props.desativado}
               onPress={() => props.onChange(o.valor)}
               style={[estilos.opcao, selecionado && estilos.selecionada]}
