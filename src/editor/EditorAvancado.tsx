@@ -30,6 +30,7 @@ import {
   type TreinoAvancado,
 } from '../treinos/avancado';
 import { CampoNumero } from './CampoNumero';
+import { CampoTempo } from './CampoTempo';
 import { estilosEditor as e } from './estilos';
 
 interface Operacoes {
@@ -225,17 +226,14 @@ function NoEtapa(props: { etapa: Etapa; posicao: Posicao; ops: Operacoes }) {
           onPress={() => alterar({ fim: { tipo: 'manual' } })}
         />
         {etapa.fim.tipo === 'tempo' ? (
-          <View style={estilos.segundos}>
-            <CampoNumero
-              estilo={[e.entrada, estilos.entradaSegundos]}
-              rotulo={t('avancado.segundosEtapa')}
-              valor={etapa.fim.segundos}
-              min={1}
-              max={LIMITES_AVANCADO.segundos}
-              onChange={(segundos) => alterar({ fim: { tipo: 'tempo', segundos } })}
-            />
-            <Text style={estilos.unidade}>s</Text>
-          </View>
+          <CampoTempo
+            estilo={e.entrada}
+            rotulo={t('avancado.segundosEtapa')}
+            valor={etapa.fim.segundos}
+            min={1}
+            max={LIMITES_AVANCADO.segundos}
+            onChange={(segundos) => alterar({ fim: { tipo: 'tempo', segundos } })}
+          />
         ) : null}
       </View>
       <Controles id={etapa.id} posicao={posicao} ops={ops} />

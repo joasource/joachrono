@@ -15,25 +15,28 @@ import { t } from '../i18n/t';
 import { formatarTempo } from '../execucao/aparencia';
 import { LIMITES, medidas, normalizarSimples, type TreinoSimples } from '../treinos/modelo';
 import { CampoNumero } from './CampoNumero';
+import { CampoTempo } from './CampoTempo';
 import { estilosEditor as e } from './estilos';
 
 type Campo = Exclude<keyof TreinoSimples, 'modo' | 'id' | 'nome'>;
 
-const CAMPOS: { campo: Campo; chave: string; min: number; max: number }[] = [
+const CAMPOS: { campo: Campo; chave: string; min: number; max: number; tempo?: boolean }[] = [
   { campo: 'rounds', chave: 'form.rounds', min: 1, max: LIMITES.rounds },
-  { campo: 'segundosRound', chave: 'form.trabalho', min: 1, max: LIMITES.segundos },
-  { campo: 'segundosDescanso', chave: 'form.descanso', min: 0, max: LIMITES.segundos },
+  { campo: 'segundosRound', chave: 'form.trabalho', min: 1, max: LIMITES.segundos, tempo: true },
+  { campo: 'segundosDescanso', chave: 'form.descanso', min: 0, max: LIMITES.segundos, tempo: true },
   {
     campo: 'segundosAquecimento',
     chave: 'form.aquecimento',
     min: 0,
     max: LIMITES.segundos,
+    tempo: true,
   },
   {
     campo: 'segundosDesaquecimento',
     chave: 'form.desaquecimento',
     min: 0,
     max: LIMITES.segundos,
+    tempo: true,
   },
 ];
 
@@ -78,19 +81,30 @@ export function FormSimples(props: {
           maxLength={60}
         />
 
-        {CAMPOS.map(({ campo, chave, min, max }) => {
+        {CAMPOS.map(({ campo, chave, min, max, tempo }) => {
           const rotulo = t(chave);
           return (
             <View key={campo}>
               <Text style={e.rotulo}>{rotulo}</Text>
-              <CampoNumero
-                estilo={e.entrada}
-                rotulo={rotulo}
-                valor={treino[campo]}
-                min={min}
-                max={max}
-                onChange={(v) => setTreino((t) => ({ ...t, [campo]: v }))}
-              />
+              {tempo ? (
+                <CampoTempo
+                  estilo={e.entrada}
+                  rotulo={rotulo}
+                  valor={treino[campo]}
+                  min={min}
+                  max={max}
+                  onChange={(v) => setTreino((t) => ({ ...t, [campo]: v }))}
+                />
+              ) : (
+                <CampoNumero
+                  estilo={e.entrada}
+                  rotulo={rotulo}
+                  valor={treino[campo]}
+                  min={min}
+                  max={max}
+                  onChange={(v) => setTreino((t) => ({ ...t, [campo]: v }))}
+                />
+              )}
             </View>
           );
         })}
