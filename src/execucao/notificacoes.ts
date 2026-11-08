@@ -1,9 +1,5 @@
 import * as Notifications from 'expo-notifications';
-import {
-  AndroidAudioUsage,
-  AndroidImportance,
-  AndroidNotificationVisibility,
-} from 'expo-notifications';
+import { AndroidImportance, AndroidNotificationVisibility } from 'expo-notifications';
 import { useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
 
@@ -14,7 +10,8 @@ import { APARENCIA } from './aparencia';
 // plano o JS pode ser suspenso, mas o sistema entrega o alerta na hora certa. O iOS guarda no máximo
 // 64 agendadas, então agendamos só as próximas e reagendamos a cada mudança de estado.
 // Canais Android são imutáveis depois de criados: ao mudar som/importância, troque o id (v2...).
-const CANAL = 'etapas-v4';
+const CANAL = 'etapas-v5';
+const CANAIS_ANTIGOS = ['etapas-v2', 'etapas-v4'];
 const MAX_AGENDADAS = 30;
 
 Notifications.setNotificationHandler({
@@ -29,13 +26,14 @@ Notifications.setNotificationHandler({
 
 async function garantirCanal() {
   if (Platform.OS !== 'android') return;
+  for (const id of CANAIS_ANTIGOS)
+    await Notifications.deleteNotificationChannelAsync(id).catch(() => {});
   await Notifications.setNotificationChannelAsync(CANAL, {
     name: 'Trocas de etapa',
     importance: AndroidImportance.HIGH,
-    // Sem `sound`: o módulo usa o som padrão do sistema. Atenção: `sound: 'default'` é lido como um
-    // arquivo chamado "default" (inexistente) e deixa o canal mudo.
-    // Toca pelo volume de ALARME (não o de notificação, que costuma estar baixo/zerado).
-    audioAttributes: { usage: AndroidAudioUsage.ALARM },
+    // Mudo de propósito: o som vem do áudio nativo da linha do tempo (linhaDoTempo.ts); a notificação
+    // fica só como aviso visual e vibração, sem tocar o "pingo" do sistema em cima do gongo.
+    sound: null,
     enableVibrate: true,
     lockscreenVisibility: AndroidNotificationVisibility.PUBLIC,
     vibrationPattern: [0, 250, 150, 250],
