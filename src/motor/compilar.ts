@@ -2,7 +2,7 @@ import type { Item, OpcoesCompilacao, Passo, Rodada, Treino } from './tipos';
 
 /** Desdobra as repetições e devolve a lista linear de passos do treino. */
 export function compilar(treino: Treino, opcoes: OpcoesCompilacao = {}): Passo[] {
-  const { removerDescansoFinal = true } = opcoes;
+  const { removerDescansoFinal = treino.pularUltimoDescanso ?? true } = opcoes;
   const passos: Passo[] = [];
 
   const percorrer = (itens: Item[], rodadas: Rodada[]): void => {
@@ -76,6 +76,7 @@ export interface ParametrosRounds {
   /** Aquecimento e desaquecimento são opcionais; 0 ou ausente = não cria a etapa. */
   segundosAquecimento?: number;
   segundosDesaquecimento?: number;
+  pularUltimoDescanso?: boolean;
 }
 
 /** Atalho do "modo simples": N rounds de trabalho + descanso, com aquecimento/desaquecimento. */
@@ -114,5 +115,5 @@ export function treinoDeRounds(id: string, nome: string, p: ParametrosRounds): T
       fim: { tipo: 'tempo', segundos: p.segundosDesaquecimento },
     });
   }
-  return { id, nome, itens };
+  return { id, nome, itens, pularUltimoDescanso: p.pularUltimoDescanso };
 }

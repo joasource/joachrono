@@ -32,6 +32,7 @@ import {
 import { CampoNumero } from './CampoNumero';
 import { CampoTempo } from './CampoTempo';
 import { estilosEditor as e } from './estilos';
+import { OpcaoSwitch } from './OpcaoSwitch';
 
 interface Operacoes {
   atualizar: (id: string, f: (item: Item) => Item) => void;
@@ -93,6 +94,13 @@ export function EditorAvancado(props: {
             {m}
           </Text>
         ))}
+
+        <OpcaoSwitch
+          rotulo={t('form.pularUltimoDescanso')}
+          dica={t('form.pularUltimoDescansoDica')}
+          valor={treino.pularUltimoDescanso}
+          onChange={(pularUltimoDescanso) => setTreino((x) => ({ ...x, pularUltimoDescanso }))}
+        />
 
         <Text style={e.duracao}>
           {t('form.duracao', {

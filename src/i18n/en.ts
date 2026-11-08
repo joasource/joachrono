@@ -40,6 +40,8 @@ export const en: Traducoes = {
     aquecimento: 'Warm-up',
     desaquecimento: 'Cool-down',
     duracao: 'Total time: %{tempo}',
+    pularUltimoDescanso: 'Skip last rest',
+    pularUltimoDescansoDica: 'Ends right after the last repeat, with no rest.',
     converterTitulo: 'Convert to advanced?',
     converterMsg:
       'You will be able to freely edit steps and repeat blocks, but you cannot go back to simple mode.',

@@ -30,6 +30,8 @@ export interface Treino {
   id: string;
   nome: string;
   itens: Item[];
+  /** Não descansar depois da última repetição (padrão: true). Ver `OpcoesCompilacao`. */
+  pularUltimoDescanso?: boolean;
 }
 
 /** Posição dentro de uma repetição: "round 3 de 8". Do grupo mais externo para o mais interno. */

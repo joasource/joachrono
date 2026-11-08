@@ -17,8 +17,9 @@ import { LIMITES, medidas, normalizarSimples, type TreinoSimples } from '../trei
 import { CampoNumero } from './CampoNumero';
 import { CampoTempo } from './CampoTempo';
 import { estilosEditor as e } from './estilos';
+import { OpcaoSwitch } from './OpcaoSwitch';
 
-type Campo = Exclude<keyof TreinoSimples, 'modo' | 'id' | 'nome'>;
+type Campo = Exclude<keyof TreinoSimples, 'modo' | 'id' | 'nome' | 'pularUltimoDescanso'>;
 
 const CAMPOS: { campo: Campo; chave: string; min: number; max: number; tempo?: boolean }[] = [
   { campo: 'rounds', chave: 'form.rounds', min: 1, max: LIMITES.rounds },
@@ -108,6 +109,13 @@ export function FormSimples(props: {
             </View>
           );
         })}
+
+        <OpcaoSwitch
+          rotulo={t('form.pularUltimoDescanso')}
+          dica={t('form.pularUltimoDescansoDica')}
+          valor={treino.pularUltimoDescanso}
+          onChange={(pularUltimoDescanso) => setTreino((x) => ({ ...x, pularUltimoDescanso }))}
+        />
 
         <Text style={e.duracao}>
           {t('form.duracao', { tempo: total ? formatarTempo(total.segundos * 1000) : '—' })}

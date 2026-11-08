@@ -38,6 +38,8 @@ export const pt = {
     aquecimento: 'Aquecimento',
     desaquecimento: 'Desaquecimento',
     duracao: 'Duração total: %{tempo}',
+    pularUltimoDescanso: 'Pular último descanso',
+    pularUltimoDescansoDica: 'Termina direto depois da última repetição, sem descansar.',
     converterTitulo: 'Converter para avançado?',
     converterMsg:
       'Você poderá editar etapas e blocos de repetição livremente, mas não dá para voltar ao modo simples.',

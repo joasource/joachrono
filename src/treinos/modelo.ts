@@ -18,6 +18,8 @@ export interface TreinoSimples {
   segundosDescanso: number;
   segundosAquecimento: number;
   segundosDesaquecimento: number;
+  /** Sem descanso depois da última repetição (padrão: ligado). */
+  pularUltimoDescanso: boolean;
 }
 
 export const LIMITES = { rounds: 99, segundos: 3600 };
@@ -32,6 +34,7 @@ export function novoTreinoSimples(id: string): TreinoSimples {
     segundosDescanso: 10,
     segundosAquecimento: 0,
     segundosDesaquecimento: 0,
+    pularUltimoDescanso: true,
   };
 }
 
@@ -52,6 +55,7 @@ export function normalizarSimples(bruto: unknown): TreinoSimples | null {
     segundosDescanso: inteiro(b.segundosDescanso, 0, LIMITES.segundos, padrao.segundosDescanso),
     segundosAquecimento: inteiro(b.segundosAquecimento, 0, LIMITES.segundos, 0),
     segundosDesaquecimento: inteiro(b.segundosDesaquecimento, 0, LIMITES.segundos, 0),
+    pularUltimoDescanso: b.pularUltimoDescanso !== false,
   };
 }
 
@@ -72,7 +76,13 @@ export function paraTreino(t: TreinoSalvo): Treino {
 
 /** Leva um treino simples para o editor avançado (a conversão inversa não existe). */
 export function simplesParaAvancado(t: TreinoSimples): TreinoAvancado {
-  return { modo: 'avancado', id: t.id, nome: t.nome, itens: paraTreinoSimples(t).itens };
+  return {
+    modo: 'avancado',
+    id: t.id,
+    nome: t.nome,
+    itens: paraTreinoSimples(t).itens,
+    pularUltimoDescanso: t.pularUltimoDescanso,
+  };
 }
 
 /** Duração/etapas de qualquer treino salvo, medidas sobre os passos que o motor realmente executa. */

@@ -95,7 +95,13 @@ describe('validação e medidas', () => {
   it('barra treinos grandes demais', () => {
     const grande = rep('a', 99, [rep('b', 99, [etapa('c')])]);
     expect(problemas([grande]).geral).toHaveLength(1);
-    const t: TreinoAvancado = { modo: 'avancado', id: 'x', nome: '', itens: [grande] };
+    const t: TreinoAvancado = {
+      modo: 'avancado',
+      id: 'x',
+      nome: '',
+      itens: [grande],
+      pularUltimoDescanso: true,
+    };
     expect(medidasAvancado(t)).toBeNull();
   });
   it('mede a duração sem o descanso final', () => {
@@ -103,6 +109,7 @@ describe('validação e medidas', () => {
       modo: 'avancado',
       id: 'x',
       nome: '',
+      pularUltimoDescanso: true,
       itens: [rep('r', 3, [etapa('w', 20), etapa('d', 10, 'descanso')])],
     };
     expect(medidasAvancado(t)).toEqual({ segundos: 80, temManual: false, passos: 5 });
@@ -112,3 +119,23 @@ describe('validação e medidas', () => {
 function base(): Item[] {
   return [etapa('a'), rep('r', 2, [etapa('b')])];
 }
+
+describe('pularUltimoDescanso', () => {
+  const base = (pular: boolean): TreinoAvancado => ({
+    modo: 'avancado',
+    id: 'x',
+    nome: '',
+    pularUltimoDescanso: pular,
+    itens: [rep('r', 3, [etapa('w', 20), etapa('d', 10, 'descanso')])],
+  });
+  it('ligado: 3 × 20 s + 2 × 10 s; desligado mantém o último descanso', () => {
+    expect(medidasAvancado(base(true))?.segundos).toBe(80);
+    expect(medidasAvancado(base(false))?.segundos).toBe(90);
+  });
+  it('registros antigos (sem o campo) vêm ligados', () => {
+    expect(normalizarAvancado({ id: 'a', itens: [] })?.pularUltimoDescanso).toBe(true);
+    expect(
+      normalizarAvancado({ id: 'a', itens: [], pularUltimoDescanso: false })?.pularUltimoDescanso,
+    ).toBe(false);
+  });
+});

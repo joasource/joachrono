@@ -15,6 +15,8 @@ export interface TreinoAvancado {
   id: string;
   nome: string;
   itens: Item[];
+  /** Sem descanso depois da última repetição (padrão: ligado). */
+  pularUltimoDescanso: boolean;
 }
 
 export const LIMITES_AVANCADO = {
@@ -37,7 +39,7 @@ export const CATEGORIAS_ETAPA: CategoriaEtapa[] = [
 export const SEGUNDOS_PADRAO = 30;
 
 export function novoTreinoAvancado(id: string): TreinoAvancado {
-  return { modo: 'avancado', id, nome: '', itens: [] };
+  return { modo: 'avancado', id, nome: '', itens: [], pularUltimoDescanso: true };
 }
 
 export function novaEtapa(categoria: CategoriaEtapa = 'trabalho'): Item {
@@ -106,6 +108,7 @@ export function normalizarAvancado(bruto: unknown): TreinoAvancado | null {
     id: b.id,
     nome: typeof b.nome === 'string' ? b.nome.trim().slice(0, 60) : '',
     itens: normalizarItens(b.itens),
+    pularUltimoDescanso: b.pularUltimoDescanso !== false,
   };
 }
 
@@ -186,7 +189,12 @@ export function problemas(itens: Item[]): Problemas {
 }
 
 export function paraTreinoAvancado(t: TreinoAvancado): Treino {
-  return { id: t.id, nome: t.nome || 'Treino', itens: t.itens };
+  return {
+    id: t.id,
+    nome: t.nome || 'Treino',
+    itens: t.itens,
+    pularUltimoDescanso: t.pularUltimoDescanso,
+  };
 }
 
 /** Duração e quantidade de etapas já desdobradas; null se o treino passa do limite. */
