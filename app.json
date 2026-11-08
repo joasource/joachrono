@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "owner": "joaquimfsneto",
+    "extra": {
+      "eas": {
+        "projectId": "a0ab4675-996a-4d1c-9eb7-7078c080a6cd"
+      }
     }
   }
 }
