@@ -5,7 +5,7 @@
 # joaChrono
 
 **Temporizador de treino para intervalados, do simples ao avançado.**
-Android e iOS · PT-BR e EN · feito com Expo e React Native
+Android e iOS · Garmin Instinct 2X · PT-BR e EN · feito com Expo e React Native
 
 </div>
 
@@ -15,7 +15,17 @@ Android e iOS · PT-BR e EN · feito com Expo e React Native
 
 Um cronômetro de exercícios pensado para quem treina com intervalos: HIIT, tabata, circuito, corrida intervalada. Você monta o treino uma vez, aperta **Iniciar** e o app avisa cada troca com som e vibração, inclusive com a tela bloqueada.
 
-## Recursos
+## O que há neste repositório
+
+| Pasta      | O que é                                                                                        |
+| ---------- | ---------------------------------------------------------------------------------------------- |
+| `src/`     | App de celular (Expo / React Native / TypeScript), Android e iOS                               |
+| `garmin/`  | App nativo para o relógio Garmin Instinct 2X Solar (Connect IQ, Monkey C), com o motor portado |
+| `assets/`  | Ícones e sons                                                                                  |
+| `locales/` | Nome do app por idioma                                                                         |
+| `.github/` | Workflow que gera o APK e publica a release a cada tag `v*`                                    |
+
+## Recursos do app de celular
 
 - **Modo simples:** aquecimento, rounds, trabalho, descanso e desaquecimento. O último descanso pode ser pulado.
 - **Modo avançado:** lista livre de etapas (aquecer, trabalho, descanso, desaquecer, livre) e blocos “Repetir N×”, no estilo dos treinos do Garmin. Etapas podem acabar por tempo ou manualmente, ao tocar em “Próxima”.
@@ -51,10 +61,12 @@ src/
   treinos/        modelo, normalização e armazenamento dos treinos
   editor/         formulários dos modos simples e avançado
   historico/      registro das execuções
+  backup/         exportar e importar treinos, histórico e configurações (JSON)
   configuracoes/  preferências do usuário
   i18n/           traduções (pt é a fonte das chaves)
 assets/           ícones e sons
 locales/          nome do app por idioma
+garmin/           app do relógio (veja abaixo)
 ```
 
 O motor em `src/motor/` não importa React nem Expo de propósito: o mesmo código roda no app, nos testes e, no futuro, em relógios (Garmin / Apple Watch). O tempo é sempre calculado por diferença de timestamps, nunca contando ticks, então sobrevive a pausas do JavaScript em segundo plano.
@@ -86,9 +98,23 @@ npx expo lint        # lint
 npx prettier --check .
 ```
 
+## App para Garmin Instinct 2X Solar
+
+Pasta [`garmin/`](garmin/README.md). App Connect IQ nativo (Monkey C), porque o motor em TypeScript não roda no relógio: ele foi **portado** para `garmin/source/Motor.mc`, com testes próprios rodando no simulador.
+
+- Treinos do modo simples e do **modo avançado** (etapas e blocos “Repetir N×”), editados no próprio relógio, com editor de tempo em minutos e segundos e repetição ao segurar o botão.
+- Cronômetro livre com voltas.
+- Bipe, vibração e contagem regressiva nas trocas; grava a atividade (frequência cardíaca incluída) no Garmin Connect.
+- Compilar: `garmin/tools/build.sh`. Testar no simulador: `garmin/tools/test.sh`. Detalhes de SDK, chave e instalação em [`garmin/README.md`](garmin/README.md).
+- Próximo passo: sincronizar os treinos do celular para o relógio.
+
+## Releases
+
+Ao empurrar uma tag `vX.Y.Z` igual à `version` do `app.json`, o GitHub Actions roda tsc, lint e testes, gera o APK no EAS e cria a release com o APK anexado. O app do Garmin é instalado à mão (`.prg`), fora desse fluxo.
+
 ## Estado do projeto
 
-Em desenvolvimento ativo, distribuído por enquanto só como APK Android. Publicação nas lojas e versão para iOS ficam para depois.
+Em desenvolvimento ativo, distribuído por enquanto só como APK Android (celular) e `.prg` instalado por USB (relógio). Publicação nas lojas e versão para iOS ficam para depois.
 
 ## Licença
 
