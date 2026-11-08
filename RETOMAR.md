@@ -34,8 +34,20 @@ App de cronômetro de exercícios (Android e iOS), Expo SDK 58 + TypeScript + ex
 
 Configurações v1 (não commitada, sem teste em aparelho): `src/configuracoes/` (modelo puro + store síncrono em kv-store `configuracoes.v1` + `Segmentos`), tela `/configuracoes` (engrenagem na lista): som, volume (baixo/médio/alto), contagem regressiva (off/3/5/10 s), vibração, sinais com a tela bloqueada (desligado = sem áudio nativo/`doNotMix`; a notificação passa a tocar o som do sistema) e notificações. Canal Android por combinação (`etapas-v6-{s|m}{v|n}`). Opção por treino "Pular último descanso" (`pularUltimoDescanso`, padrão ligado; editor simples e avançado). **Configurações v2 (não commitada, sem teste em aparelho):** tipo de sinal gongo/bipe (`tipoSinal`; bipe = troca 1 bipe de 500 ms, fim 3 bipes de 250 ms a 1320 Hz; `assets/sons/troca-bipe.wav` e `fim-bipe.wav` espelham `BIPE_TROCA`/`BIPE_FIM` de `linhaDoTempo.ts`, que gera o mesmo som no áudio nativo) e intensidade da vibração suave/média/forte (`intensidadeVibracao`, perfis em `PERFIL_VIBRACAO`, `vibracao.ts`; a média é o comportamento antigo; padrão de vibração das notificações em `VIBRACAO_NOTIFICACAO`, canal `etapas-v7-{s|m}{1|2|3|n}`). A tela de configurações dá uma prévia ao mudar as duas. É JS puro: não precisa de novo build nativo, mas os `.wav` novos só entram num build/bundle novo. 7. Builds EAS e publicação.
 
+## Atualização (2026-11-08): histórico, Sobre/Ajuda e release automática
+
+Tudo abaixo está commitado, enviado e testado no aparelho pelo Joaquim.
+
+- **Histórico:** `src/historico/` (modelo puro + kv-store `historico.v1`, leitura/escrita síncronas) e tela `/historico`. Grava ao concluir o treino; se a pessoa sai antes, grava parcial só a partir de 10 s (`MINIMO_PARCIAL_MS`); o treino de exemplo não entra. Toque longo seleciona e exclui, como na lista de treinos. Resumo dos últimos 7 dias; limite de 1000 registros.
+- **Treino novo:** padrão 3 rounds × 60 s de trabalho / 30 s de descanso (`novoTreinoSimples`). Formulário simples na ordem: aquecimento, rounds, trabalho, descanso, desaquecimento.
+- **Sobre e Ajuda:** telas `/sobre` (versão, autor, e-mail, texto da licença) e `/ajuda` (cartões curtos), abertas pela seção "Informações" nas Configurações. O texto da licença está em `src/i18n/pt.ts` e `en.ts`: se o `LICENSE` mudar, atualizar lá também.
+- **README.md** na raiz (recursos, estrutura, como rodar).
+- **Release de APK pelo GitHub Actions:** `.github/workflows/release.yml` roda ao empurrar uma tag `v*`. Confere se a tag é igual à `version` do `app.json`, roda tsc, lint e testes, gera o APK no EAS (`--profile preview`) e cria a release com o APK anexado. Usa o secret `EXPO_TOKEN` do repositório (token pessoal criado em expo.dev/settings/access-tokens). Primeira release: `v0.1.0`.
+- **Para lançar uma versão nova:** subir `version` no `app.json`, commitar, `git tag vX.Y.Z && git push origin vX.Y.Z`. Cada tag gasta um build da cota do EAS.
+
 ## Pendências
 
+- Ideias: experimento `mixWithOthers` no áudio com tela bloqueada (hoje `doNotMix` pausa a música de outros apps), duplicar treino, backup/importação em JSON, screenshots no README.
 - Decidido (2026-11-08): bundle id/package `app.joachrono` e titular Joaquim Ferreira (pessoa física, licença proprietária) ficam como estão. Por ora só se gera APK Android, sem publicação.
 - Contas: Apple Developer (US$ 99/ano), Google Play (US$ 25).
 
