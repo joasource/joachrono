@@ -37,7 +37,7 @@ tools/                build.sh, test.sh e Dockerfiles do simulador
    `openssl genrsa -out developer_key.pem 4096 && openssl pkcs8 -topk8 -inform PEM -outform DER -in developer_key.pem -out developer_key.der -nocrypt`
    e guarde em `~/garmin-sdk/keys/` (ou use `CIQ_KEY`).
 3. `garmin/tools/build.sh` gera `~/garmin-sdk/out/joachrono.prg`.
-4. `garmin/tools/test.sh` roda os testes no simulador (precisa das imagens Docker `ciq-sdkm` e `ciq-sim`).
+4. `garmin/tools/test.sh` roda os testes no simulador (precisa das imagens Docker `ciq-sdkm` e `ciq-sim`; para recriá-las, veja `tools/DOCKER.md`).
 
 ## Instalar no relógio
 
